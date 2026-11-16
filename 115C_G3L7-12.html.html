@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>翰林三上國語守護島</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+<style>:root{--ink:#3b3a4a;--sub:#7a7890;--pri:#ff8a65;--pri2:#ff7043;--sea:#a9dcea;--card:#ffffff;--ic:#8fd6b4}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:#bfe6f0;color:var(--ink);font-family:'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#app{position:fixed;inset:0}
+button{font-family:inherit;color:inherit;cursor:pointer;border:0}
+.facet{clip-path:polygon(16px 0,calc(100% - 16px) 0,100% 16px,100% calc(100% - 16px),calc(100% - 16px) 100%,16px 100%,0 calc(100% - 16px),0 16px)}
+.btn{background:#fff;padding:.7em 1.2em;font-size:1.05rem;font-weight:700;border-radius:14px;box-shadow:inset 0 -5px 0 rgba(0,0,0,.1),0 3px 8px rgba(40,60,90,.12);transition:transform .1s;min-height:48px}
+.btn:active{transform:translateY(2px)}
+.btn.primary{background:linear-gradient(135deg,#ffa07a 0 50%,#ff8a65 50%);color:#fff}
+.btn.danger{background:#f6d4d4;color:#b23b3b}
+.btn.icon{width:52px;padding:0;font-size:1.4rem}
+.btn.sm{min-height:42px;padding:.45em 1em;font-size:1rem}
+.light{background:linear-gradient(135deg,#fff7d6 0 50%,#ffefb8 50%);padding:.6em 1.1em;font-weight:700;color:#9a6b00;white-space:nowrap}
+.light b{font-size:1.25em}
+
+/* 注音：直式，聲調在右上 */
+.zy{display:inline-flex;align-items:center;line-height:1}
+.zy .h{display:inline-block}
+.zc{display:inline-flex;flex-direction:column;align-items:center;position:relative;font-size:.34em;line-height:1.02;vertical-align:middle;margin-left:.1em;padding-right:.55em;font-weight:500}
+.zc b{display:block;font-weight:600}
+.zc .tn{position:absolute;right:0;top:calc((var(--n) - 1) * 1.02em - .32em);font-style:normal;font-weight:700}
+.zc .lt{font-style:normal;line-height:.5;font-weight:900}
+
+/* 標題 */
+.title-screen{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.title-bg{position:absolute;inset:0}.title-bg svg{width:100%;height:100%}
+.title-card{position:relative;background:linear-gradient(160deg,#ffffff 0 55%,#f4fbff 55%);padding:28px 36px 30px;width:min(560px,92vw);text-align:center}
+.title-owl{width:120px;margin:0 auto -6px;animation:bob 3s ease-in-out infinite}
+h1{margin:0;line-height:1.05}
+h1 .t1{display:block;font-size:1.3rem;color:var(--sub);letter-spacing:.2em}
+h1 .t2{display:block;font-size:3.4rem;font-weight:900;letter-spacing:.12em;background:linear-gradient(90deg,#3fae8a,#f08a5d,#9b7ad8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--sub);margin:.4em 0 1em}
+.plist{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-height:30vh;overflow:auto;margin-bottom:12px}
+.pbtn{background:#eef8f4;padding:.7em 1.1em;border-radius:14px;font-weight:700;font-size:1.05rem;box-shadow:inset 0 -4px 0 rgba(0,0,0,.08);display:flex;gap:.6em;align-items:center}
+.plight{color:#b98600;font-size:.9em}
+.newp{display:flex;gap:8px}
+.newp input{flex:1;min-width:0;font-size:1.05rem;padding:.6em .8em;border:2px solid #dfe7ee;border-radius:12px;font-family:inherit}
+
+/* 地圖 */
+.map-screen{position:absolute;inset:0;background:linear-gradient(180deg,#cdeef5,#8fd0e6)}
+.mapsvg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.isl{cursor:pointer;transition:transform .2s}
+.isl:hover{filter:brightness(1.04)}
+.isl.locked{cursor:not-allowed}
+.lbl text{font-size:17px;font-weight:900;fill:var(--ink);font-family:inherit}
+.mistg{animation:drift 6s ease-in-out infinite alternate}
+.hud{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;pointer-events:none}
+.hud>*{pointer-events:auto}
+.hud-l{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.92);padding:8px 18px 8px 10px}
+.hud-owl{width:48px}
+.hud-t{font-weight:900;font-size:1.1rem}.hud-n{color:var(--sub);font-size:.92rem}
+.hud-r{display:flex;gap:8px;align-items:center}
+
+/* 島嶼 */
+.isl-screen,.hut-screen{position:absolute;inset:0;display:flex;flex-direction:column;background:linear-gradient(180deg,#d8f1f7,#a9dcea);padding:12px;gap:12px;overflow:auto}
+.isl-top{display:flex;align-items:center;gap:12px}
+.isl-title{flex:1;font-size:1.6rem;font-weight:900;display:flex;align-items:center;gap:.5em;flex-wrap:wrap}
+.isl-title .ln{background:var(--ic);padding:.15em .6em;border-radius:10px;font-size:.7em}
+.isl-title .gn{color:var(--sub);font-size:.65em;font-weight:700}
+.isl-body{flex:1;display:grid;grid-template-columns:1.1fr 1fr;gap:14px;min-height:0}
+.isl-art{position:relative;background:linear-gradient(160deg,rgba(255,255,255,.75) 0 50%,rgba(255,255,255,.55) 50%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px}
+.isl-art svg{width:100%;max-height:52vh}
+.isl-spirit{position:absolute;width:24%;max-width:130px;left:6%;bottom:16%;filter:grayscale(.5);opacity:.85}
+.isl-spirit.awake{filter:none;opacity:1;animation:bob 2.4s ease-in-out infinite}
+.isl-cap{font-weight:700;color:var(--sub);text-align:center}
+.stages{display:flex;flex-direction:column;gap:10px;justify-content:center}
+.stage{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#ffffff 0 60%,#f6fbfd 60%);padding:12px 18px;text-align:left;min-height:72px;box-shadow:inset 0 -5px 0 rgba(0,0,0,.08)}
+.stage:active{transform:translateY(2px)}
+.sico{width:52px;height:52px;flex:0 0 52px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:900;background:var(--ic);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+.sico svg{width:46px}
+.sname{flex:1;font-size:1.25rem;font-weight:900;display:flex;flex-direction:column}
+.sname small{font-size:.75rem;font-weight:500;color:var(--sub)}
+.sstar i{font-style:normal;font-size:1.5rem;color:#dcdbe6}.sstar i.on{color:#ffbf1f}
+.stage.boss{background:linear-gradient(135deg,#fff4e8 0 60%,#ffe9d6 60%)}
+.stage.mist{background:linear-gradient(135deg,#f1eef9 0 60%,#e6e0f5 60%)}
+.stage.mist .sico{background:#c9bfe6;color:#fff}
+.stage.dis{opacity:.5}
+
+/* 答題 */
+.quiz{position:absolute;inset:0;display:flex;flex-direction:column;background:linear-gradient(180deg,#e6f6fa,#bfe6f0);padding:12px 16px 120px;gap:12px;overflow:auto}
+.quiz.m-boss,.quiz.m-final{background:linear-gradient(180deg,#f3eefb,#d9cff2)}
+.qtop{display:flex;align-items:center;gap:12px}
+.qt{font-weight:900;font-size:1.25rem;white-space:nowrap}
+.dots{flex:1;display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.dots i{width:16px;height:16px;background:#fff;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);opacity:.7}
+.dots i.d{background:var(--ic);opacity:1}.dots i.c{background:#ff8a65;opacity:1;transform:scale(1.3)}
+.hearts{font-size:1.6rem;color:#ef5b6b;min-width:40px;text-align:right}
+.hearts .lost{color:#d6d3e0}.hearts .pop{animation:pop .4s}
+.qmain{display:flex;gap:14px;align-items:stretch;flex:1;min-height:0}
+.qside{width:min(16vw,130px);flex:0 0 auto;align-self:flex-end;animation:bob 3s ease-in-out infinite}
+.qcard{flex:1;background:linear-gradient(160deg,#fff 0 60%,#fafdff 60%);padding:22px 28px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;min-height:180px}
+.qlabel{font-size:1.25rem;font-weight:700;color:var(--sub)}
+.qtext{font-size:1.7rem;font-weight:700;line-height:1.6}
+.qword.big{font-size:4.2rem;font-weight:900;letter-spacing:.06em;display:flex;align-items:center;justify-content:center;flex-wrap:wrap}
+.qword .hl{color:#e8603c;text-decoration:underline;text-decoration-thickness:6px;text-underline-offset:10px}
+.blank{display:inline-flex;align-items:center;margin:0 .05em}
+.blank .bx{display:inline-flex;width:1.05em;height:1.05em;align-items:center;justify-content:center;border:4px dashed #ff8a65;border-radius:12px;color:#ffb59c;font-size:.8em}
+.blank .zc{color:#e8603c}
+.qchar{font-size:6rem;font-weight:900}
+.gap{display:inline-block;background:#fff1ea;border-bottom:4px solid #ff8a65;padding:0 .3em;margin:0 .2em;color:#ffb59c;border-radius:6px}
+.opts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.opts.long{grid-template-columns:1fr 1fr}
+.opt{background:linear-gradient(135deg,#ffffff 0 55%,#f4f9fc 55%);border-radius:18px;min-height:96px;padding:10px 14px;box-shadow:inset 0 -6px 0 rgba(0,0,0,.09),0 4px 10px rgba(40,60,90,.1);font-weight:800;transition:transform .12s,background .2s}
+.opt:active{transform:translateY(3px)}
+.opt.copt{font-size:3rem}
+.opt.topt{font-size:1.45rem}
+.opt.lopt{font-size:1.2rem;text-align:left;line-height:1.5}
+.opt.zopt{font-size:5.2rem;line-height:1;display:flex;align-items:center;justify-content:center}
+.opt.zopt .zc{margin:0}
+.opt.right{background:#c9f0dc;box-shadow:inset 0 -6px 0 #6cc49a;animation:pop .35s}
+.opt.wrong{background:#fbd5d5;box-shadow:inset 0 -6px 0 #e58a8a;animation:shake .35s}
+.opt:disabled{color:inherit}
+.fb{position:fixed;left:0;right:0;bottom:0;transform:translateY(110%);transition:transform .3s cubic-bezier(.2,.9,.3,1.2);background:#fff;padding:16px 22px calc(16px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:18px;box-shadow:0 -6px 20px rgba(40,60,90,.15);z-index:5}
+.fb.show{transform:none}
+.fb.ok{background:linear-gradient(135deg,#e9fbf2 0 70%,#d6f5e6 70%)}
+.fb.no{background:linear-gradient(135deg,#fff3ef 0 70%,#ffe5dc 70%)}
+.fbmark{font-size:1.6rem;font-weight:900;white-space:nowrap}
+.fb.ok .fbmark{color:#2f9a6c}.fb.no .fbmark{color:#e0603e}
+.fbex{flex:1;font-size:1.15rem;line-height:1.5}
+.mnote{display:block;color:#8b7ab0;font-size:.9rem;margin-top:2px}
+
+/* 疊層 */
+.overlay{position:fixed;inset:0;background:rgba(40,40,70,.45);display:flex;align-items:center;justify-content:center;z-index:20;animation:fade .2s}
+.result{background:linear-gradient(160deg,#fff 0 60%,#fbf8ff 60%);width:min(480px,92vw);padding:24px 28px;text-align:center}
+.result.small{width:min(440px,92vw)}
+.rart{width:120px;margin:0 auto}
+.result h2{margin:.2em 0;font-size:1.9rem}
+.result p{font-size:1.15rem;line-height:1.6}
+.rstars i{font-style:normal;font-size:3rem;color:#e3e1ea;display:inline-block}
+.rstars i.on{color:#ffbf1f;animation:popin .5s both}
+.rgain{display:inline-block;background:#fff4cc;color:#9a6b00;font-weight:900;padding:.4em 1em;border-radius:12px;margin-bottom:14px}
+.rbtns{display:flex;gap:10px;justify-content:center}
+.srow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed #e6e3ee;text-align:left;font-weight:700}
+.srow.teacher{color:#8b7ab0}
+.tip{color:var(--sub);font-size:.9rem!important}
+.dlg{align-items:flex-end;padding:16px;background:rgba(40,40,70,.3)}
+.dbox{width:min(900px,100%);background:linear-gradient(160deg,#fff 0 65%,#f6fbff 65%);display:flex;gap:16px;padding:16px 22px;align-items:center}
+.dpor{width:110px;flex:0 0 110px}
+.dtxt{flex:1}
+.dname{font-weight:900;color:#e0603e;font-size:1.05rem}
+.dline{font-size:1.45rem;font-weight:700;line-height:1.6;min-height:3.2em}
+.dnext{text-align:right;color:var(--sub);font-size:.9rem}
+.toast{position:fixed;left:50%;top:18px;transform:translateX(-50%);background:#fff;display:flex;align-items:center;gap:10px;padding:8px 18px 8px 8px;border-radius:16px;box-shadow:0 6px 18px rgba(40,60,90,.2);font-weight:700;z-index:30;animation:down .3s;max-width:92vw}
+.toast.out{opacity:0;transition:opacity .4s}
+.tav{width:42px}
+.shard{position:fixed;width:14px;height:14px;clip-path:polygon(50% 0,100% 100%,0 100%);pointer-events:none;z-index:40;animation:shard .9s ease-out forwards}
+
+/* 小屋 */
+.hut-body{flex:1;display:grid;grid-template-columns:1.6fr 1fr;gap:14px;min-height:0}
+.room{background:#fff;padding:10px;display:flex;flex-direction:column;gap:8px}
+.room>svg{width:100%;flex:1;min-height:0}
+.badges{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.bt{font-weight:900;color:var(--sub);margin-right:4px}
+.badge{width:52px;height:52px;background:#eee;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);padding:4px;filter:grayscale(1);opacity:.5}
+.badge.on{filter:none;opacity:1;background:#fff4cc}
+.shop{background:linear-gradient(160deg,#fff 0 60%,#fbf8ff 60%);padding:16px 20px;overflow:auto}
+.shop h3{margin:0 0 8px}
+.sitem{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed #e6e3ee;font-weight:700;font-size:1.1rem}
+.sitem em{font-style:normal;color:#2f9a6c}
+.sitem.own{color:var(--sub)}
+
+@keyframes bob{50%{transform:translateY(-6px)}}
+@keyframes drift{to{transform:translateX(10px)}}
+@keyframes pop{50%{transform:scale(1.08)}}
+@keyframes popin{from{transform:scale(0) rotate(-30deg)}to{transform:none}}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes fade{from{opacity:0}}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+@keyframes down{from{transform:translate(-50%,-30px);opacity:0}}
+@keyframes blink{50%{opacity:.3}}
+@keyframes shard{to{transform:translate(var(--dx),var(--dy)) rotate(var(--rot));opacity:0}}
+
+/* 直式平板／手機 */
+@media (orientation:portrait),(max-width:760px){
+  .isl-body,.hut-body{grid-template-columns:1fr}
+  .opts{grid-template-columns:1fr 1fr}
+  .qside{display:none}
+  .qword.big{font-size:3.2rem}
+  .hud{flex-direction:column}
+  .fb{flex-wrap:wrap}
+}
+@media (max-height:620px){.qchar{font-size:4.2rem}.qcard{min-height:130px;padding:14px}.opt{min-height:76px}.opt.zopt{font-size:4.2rem}}
+.linkbtn{background:none;color:#5b8db8;font-weight:700;font-size:1rem;margin-top:12px;text-decoration:underline;text-underline-offset:4px;min-height:44px}
+.codebox{width:100%;height:110px;font-family:ui-monospace,Menlo,monospace;font-size:.95rem;padding:10px;border:2px solid #dfe7ee;border-radius:12px;word-break:break-all;resize:none;margin:6px 0 14px;-webkit-user-select:text;user-select:text}
+.qtext .hl{color:#e8603c;text-decoration:underline;text-decoration-thickness:4px;text-underline-offset:6px}
+</style></head>
+<body><div id="app"></div>
+<script>// ===== 題庫資料（依翰林 115 學年度三上國語教師手冊 第7～12課） =====
+// chars: [生字, 注音(本課語詞中的讀音), 部首, 總筆畫, 語詞]
+// idioms: [成語, 意思, 例句(＿＿＿＿為空格)]
+// hand 題目：o 的第一個選項是正確答案；zo:true 表示選項是注音
+const L = [
+{
+  n:7, title:'風的味道', genre:'詩歌', island:'微風島', spirit:'嵐嵐', spiritTitle:'風之精靈',
+  color:'#8fd6b4', cliff:'#b98a63',
+  chars:[
+    ['鹹','ㄒㄧㄢˊ','鹵',20,'鹹味'],['蔚','ㄨㄟˋ','艸',15,'蔚藍'],['航','ㄏㄤˊ','舟',10,'回航'],
+    ['乘','ㄔㄥˊ','丿',10,'乘風破浪'],['橇','ㄑㄧㄠ','木',16,'雪橇'],['坡','ㄆㄛ','土',8,'山坡'],
+    ['野','ㄧㄝˇ','里',11,'原野'],['閉','ㄅㄧˋ','門',11,'閉上眼'],['深','ㄕㄣ','水',11,'深呼吸'],
+    ['吸','ㄒㄧ','口',7,'呼吸'],['欣','ㄒㄧㄣ','欠',8,'欣賞'],['賞','ㄕㄤˇ','貝',15,'賞心悅目'],
+    ['瞞','ㄇㄢˊ','目',16,'隱瞞']
+  ],
+  idioms:[
+    ['乘風破浪','比喻志向遠大，不怕困難，勇敢向前。','哥哥＿＿＿＿，勇敢追求自己的夢想。'],
+    ['野心勃勃','形容想得到不屬於自己的東西，企圖心太強。','那個＿＿＿＿的國王，想占領所有的土地。'],
+    ['發人深省','啟發人深刻思考，而有所醒悟。','老師說的故事＿＿＿＿，讓大家想了很久。'],
+    ['欣欣向榮','草木生長得很茂盛，比喻事物蓬勃發展。','春天到了，草原上一片＿＿＿＿的景象。'],
+    ['賞心悅目','情景很美好，讓人看了心情愉快。','滿園盛開的花朵，令人＿＿＿＿。']
+  ],
+  hand:{
+    shape:[
+      {q:'生字小偵探：「野」的右邊是哪一個部件？',o:['予','矛','子','了'],ex:'「野」的右邊是「予」，不是「矛」喔！'},
+      {q:'「鹹」左邊的部件是什麼？',o:['鹵','西','田','卤'],ex:'「鹹」的左邊是「鹵」，四個點都向右點。'}
+    ],
+    word:[
+      {q:'「蔚藍的大海」中，「蔚藍」是什麼樣的顏色？',o:['像晴朗天空般的深藍色','灰灰暗暗的顏色','紅紅的顏色','淡淡的綠色'],ex:'「蔚藍」形容像晴天的天空或大海那樣的藍色。'},
+      {q:'課文中，「清新」是用來形容什麼？',o:['草香','雪花','大海','鹹味'],ex:'風的身上有「清新的草香」。'},
+      {q:'「冰涼」適合用來形容哪一個？',o:['雪花','草香','火爐','太陽'],ex:'課文說：「冰涼的雪花」。'}
+    ],
+    sent:[
+      {q:'「風到處流浪」是把風想像成什麼？',o:['會流浪的人','一條小河','一座山','一朵花'],ex:'把風當成人來寫，這是「轉化」中的擬人法。'},
+      {q:'風剛從大海回航，因為他的身上有什麼？',o:['淡淡的鹹味','冰涼的雪花','清新的草香','甜甜的花香'],ex:'大海有淡淡的鹹味。'},
+      {q:'風剛由山坡滑下，因為他的身上有什麼？',o:['冰涼的雪花','淡淡的鹹味','清新的草香','溫暖的陽光'],ex:'山坡上有冰涼的雪花。'},
+      {q:'風剛在原野打滾，因為他的身上有什麼？',o:['清新的草香','淡淡的鹹味','冰涼的雪花','濃濃的煙味'],ex:'原野上有清新的草香。'},
+      {q:'作者用什麼方法知道風去了哪裡？',o:['閉上眼，深呼吸','看地圖','打電話問別人','跟著風跑'],ex:'「閉上眼，深呼吸，風去了哪裡，我都知道。」作者用鼻子感受。'},
+      {q:'「風的味道」這一課是什麼文體？',o:['詩歌','劇本','記敘文','書信'],ex:'第七課是詩歌。'},
+      {q:'「沒有人知道……只有我知道」用了什麼寫法？',o:['把相反的情況放在一起比較','把風當成人來寫','提出一個問題','一直重複同一個字'],ex:'「沒有」和「只有」放在一起比較，是映襯法。'},
+      {q:'哪一句把「風」寫得像人一樣？',o:['風快樂的在原野上打滾。','今天的風很大。','窗外有風。','風吹得樹葉掉下來。'],ex:'「快樂的打滾」是人的動作和心情，這是擬人法。'},
+      {q:'這一課想告訴我們什麼？',o:['用心感受，就能發現大自然的美','風會把房子吹倒','不要隨便出門','大海的水是鹹的'],ex:'風的味道讓人聯想到大自然的美景。'}
+    ]
+  }
+},
+{
+  n:8, title:'寄居蟹找新家', genre:'劇本', island:'潮汐島', spirit:'殼殼', spiritTitle:'潮之精靈',
+  color:'#f3d79e', cliff:'#c99a68',
+  chars:[
+    ['寄','ㄐㄧˋ','宀',11,'寄居蟹'],['居','ㄐㄩ','尸',8,'居住'],['幕','ㄇㄨˋ','巾',14,'第一幕'],
+    ['杯','ㄅㄟ','木',8,'紙杯'],['殼','ㄎㄜˊ','殳',12,'貝殼'],['類','ㄌㄟˋ','頁',19,'人類'],
+    ['瓶','ㄆㄧㄥˊ','瓦',11,'寶特瓶'],['蓋','ㄍㄞˋ','艸',14,'瓶蓋'],['淨','ㄐㄧㄥˋ','水',11,'淨灘'],
+    ['志','ㄓˋ','心',7,'志工'],['垃','ㄌㄜˋ','土',8,'垃圾'],['圾','ㄙㄜˋ','土',7,'垃圾'],
+    ['位','ㄨㄟˋ','人',7,'位置'],['護','ㄏㄨˋ','言',21,'愛護'],['應','ㄧㄥ','心',17,'應該']
+  ],
+  idioms:[
+    ['寄人籬下','住在別人家，依靠別人生活，不能自立。','他從小＿＿＿＿，所以特別懂事。'],
+    ['金蟬脫殼','比喻用計謀脫身。','小偷用了＿＿＿＿的方法，從後門溜走了。'],
+    ['物以類聚','同類的人或事物，常常聚集在一起。','＿＿＿＿，喜歡畫畫的同學常常一起去美術教室。'],
+    ['守口如瓶','說話十分謹慎，嚴守祕密。','這是驚喜派對的祕密，你一定要＿＿＿＿喔！'],
+    ['志同道合','彼此的志趣和理想相同。','他們＿＿＿＿，一起成立了環保社團。']
+  ],
+  hand:{
+    shape:[
+      {q:'生字小偵探：「類」的左下方是哪一個部件？',o:['犬','大','太','天'],ex:'「類」的左下方是「犬」，不是「大」。'},
+      {q:'「護」的部首是「言」，它的意思和什麼有關？',o:['說話','水','手','樹木'],ex:'「言」部的字大多和說話有關，例如：說、話、護。'}
+    ],
+    word:[
+      {q:'「漂來這麼多寶特瓶，使海灘變成垃圾場了。」句中的「使」可以換成哪一個字？',o:['讓','被','把','給'],ex:'「使」和「讓」意思相近，可以互相替換。'},
+      {q:'「淨灘」是什麼意思？',o:['清理海灘上的垃圾','在海灘上游泳','在海灘上曬太陽','在海灘上蓋房子'],ex:'「淨」是乾淨，淨灘就是把海灘清理乾淨。'},
+      {q:'「慌慌張張的躲回沙堆」中，「慌慌張張」說明寄居蟹的樣子是？',o:['很害怕、很著急','很開心','很生氣','很想睡覺'],ex:'「慌慌張張」是疊字，形容害怕又著急的樣子。'}
+    ],
+    sent:[
+      {q:'「寄居蟹找新家」是什麼文體？',o:['劇本','詩歌','記敘文','日記'],ex:'第八課是應用文中的劇本。'},
+      {q:'劇本中的「第一幕」、「第二幕」是什麼意思？',o:['故事中的一段場景','演員的名字','舞臺上的布','觀眾的座位'],ex:'劇本用「幕」來分段，每一幕是一段場景。'},
+      {q:'寄居蟹為什麼只能住在瓶蓋裡？',o:['因為找不到殼','因為瓶蓋比較漂亮','因為牠喜歡塑膠','因為天氣太熱'],ex:'「因為找不到殼，牠只能住在瓶蓋裡。」'},
+      {q:'「因為找不到殼，牠只能住在瓶蓋裡。」「因為」後面說的是什麼？',o:['原因','結果','時間','地點'],ex:'因果複句：前面說原因，後面說結果。'},
+      {q:'哪一句「竟然」用得正確？',o:['我才睡了一下，竟然就天黑了。','因為下雨，竟然我帶了傘。','竟然媽媽說：「早安。」','我把書竟然放好。'],ex:'「竟然」表示出乎意料。'},
+      {q:'淨灘志工希望大家怎麼做？',o:['帶走垃圾，留下貝殼','帶走貝殼，留下垃圾','把寄居蟹帶回家','在沙灘上丟紙杯'],ex:'希望大家以後能帶走垃圾，留下貝殼。'},
+      {q:'「啊！瓶蓋會動！」這句話表現出什麼心情？',o:['驚訝','難過','生氣','無聊'],ex:'用感嘆句表達驚訝的情緒。'},
+      {q:'小螃蟹遇到了什麼麻煩？',o:['被紙杯卡住','被浪沖走','找不到媽媽','被鳥抓走'],ex:'第一幕：小螃蟹被紙杯卡住。'},
+      {q:'這一課想提醒我們什麼？',o:['珍惜海灘環境，愛護大自然','多買新的貝殼','寄居蟹很可怕','海邊不能去'],ex:'主旨：提醒大家要珍惜海灘環境，愛護大自然。'}
+    ]
+  }
+},
+{
+  n:9, title:'阿塱壹古道', genre:'記敘文', island:'古道島', spirit:'森森', spiritTitle:'林之精靈',
+  color:'#7fc48a', cliff:'#a77d5a',
+  chars:[
+    ['挑','ㄊㄧㄠ','手',9,'挑戰',true],['戰','ㄓㄢˋ','戈',16,'挑戰'],['交','ㄐㄧㄠ','亠',6,'交頭接耳'],
+    ['隨','ㄙㄨㄟˊ','阜',16,'跟隨'],['導','ㄉㄠˇ','寸',16,'導遊'],['鳳','ㄈㄥˋ','鳥',14,'鳳梨'],
+    ['投','ㄊㄡˊ','手',7,'林投樹'],['繼','ㄐㄧˋ','糸',20,'繼續'],['續','ㄒㄩˋ','糸',21,'陸續'],
+    ['岸','ㄢˋ','山',8,'海岸'],['淺','ㄑㄧㄢˇ','水',11,'深淺'],['沿','ㄧㄢˊ','水',8,'沿路'],
+    ['踩','ㄘㄞˇ','足',15,'踩著'],['疊','ㄉㄧㄝˊ','田',22,'堆疊'],['般','ㄅㄢ','舟',10,'一般']
+  ],
+  idioms:[
+    ['交頭接耳','形容彼此低聲說悄悄話。','上課時不可以＿＿＿＿，要專心聽講。'],
+    ['如影隨形','比喻關係密切，總是緊緊跟在一起。','她們姊妹＿＿＿＿，總是一起出門。'],
+    ['投其所好','迎合別人的喜好。','知道奶奶喜歡種花，我＿＿＿＿，送她一盆蘭花。'],
+    ['夜以繼日','白天晚上都不休息，形容非常勤奮。','工人們＿＿＿＿的趕工，終於把橋蓋好了。'],
+    ['隔岸觀火','比喻事不關己，在一旁看著不幫忙。','同學遇到困難時，我們不應該＿＿＿＿。']
+  ],
+  hand:{
+    read:[
+      {q:'「睡著」的「著」怎麼念？',o:['ㄓㄠˊ','ㄓㄜ˙','ㄓㄨˋ','ㄓㄠ'],zo:true,ex:'睡著、著火的「著」念 ㄓㄠˊ。'},
+      {q:'「名著」的「著」怎麼念？',o:['ㄓㄨˋ','ㄓㄠˊ','ㄓㄜ˙','ㄓㄨㄛˊ'],zo:true,ex:'著作、名著的「著」念 ㄓㄨˋ。'},
+      {q:'「著急」的「著」怎麼念？',o:['ㄓㄠ','ㄓㄠˊ','ㄓㄜ˙','ㄓㄨˋ'],zo:true,ex:'著急、著涼的「著」念 ㄓㄠ。'},
+      {q:'「記著」的「著」怎麼念？',o:['ㄓㄜ˙','ㄓㄠˊ','ㄓㄨˋ','ㄓㄠ'],zo:true,ex:'記著、慢著的「著」念輕聲 ㄓㄜ˙。'},
+      {q:'「歌曲」的「曲」怎麼念？',o:['ㄑㄩˇ','ㄑㄩ','ㄑㄩˋ','ㄑㄩˊ'],zo:true,ex:'歌曲、曲調的「曲」念 ㄑㄩˇ，指歌曲。'},
+      {q:'「彎曲」的「曲」怎麼念？',o:['ㄑㄩ','ㄑㄩˇ','ㄑㄩˋ','ㄑㄩˊ'],zo:true,ex:'彎曲、曲折的「曲」念 ㄑㄩ，是彎折的意思。'}
+    ],
+    shape:[
+      {q:'生字小偵探：哪一個字的右上方「不是」几？',o:['沿','般','投','殼'],ex:'「沿」的右上方不是「几」，要特別注意。'}
+    ],
+    word:[
+      {q:'「這可不是一般的石頭」，「一般」是什麼意思？',o:['普通、通常','特別、少見','很大、很重','很多、很滿'],ex:'「一般」是普通、通常的意思。'},
+      {q:'「我們隨著導遊走了一段山路」，「導遊」是什麼人？',o:['帶領遊客、介紹景點的人','開車的人','賣東西的人','修路的人'],ex:'導遊是專門引導觀光客遊覽的人員。'},
+      {q:'「木棧道」是什麼？',o:['用木頭架成的道路','用石頭堆成的牆','一種大樹','一條小河'],ex:'木棧道是在山崖上用木頭架成的道路。'}
+    ],
+    sent:[
+      {q:'作者把什麼錯認成鳳梨？',o:['林投樹的果實','南田石','椰子','木棧道'],ex:'弟弟大喊：「有鳳梨！」其實是林投樹的果實。'},
+      {q:'「阿塱壹古道一邊是山，一邊是海」用了哪一個句型？',o:['一邊……一邊……','因為……所以……','雖然……但是……','先……再……'],ex:'「一邊……一邊……」用來並列說明兩件事物。'},
+      {q:'「奶奶確定公車停好後，＿起身準備下車。」空格填哪一個最好？',o:['才','卻','但是','而且'],ex:'「才」表示要先達到某個條件，後面的結果才會發生。'},
+      {q:'導遊說南田石要怎麼做，美石、美景才能長久？',o:['只能拍照，不能帶走','撿一顆帶回家','送給朋友','丟到海裡'],ex:'「只能拍照，不能帶走，美石、美景才能長久。」'},
+      {q:'「浪花一曲曲輕唱」把浪花想像成什麼？',o:['會唱歌的人','一隻小鳥','一顆石頭','一棵大樹'],ex:'把浪花想像成會唱歌的人，是轉化（擬人）法。'},
+      {q:'「你，也想來挑戰阿塱壹古道嗎？」這句的「你」指的是誰？',o:['正在讀課文的讀者','作者的弟弟','導遊','爸爸'],ex:'作者用問句邀請讀者，好像在跟你說話一樣。'},
+      {q:'「阿塱壹古道」是什麼文體？',o:['記敘文','詩歌','劇本','說明書'],ex:'第九課是記敘文（遊記）。'},
+      {q:'這一課的主旨是什麼？',o:['探訪古道，體驗大自然的美景','古道很危險，不要去','比賽誰先走完','鳳梨很好吃'],ex:'主旨：探訪古道，體驗大自然的美景。'}
+    ]
+  }
+},
+{
+  n:10, title:'秋千上的婚禮', genre:'記敘文', island:'祝福島', spirit:'朵朵', spiritTitle:'花之精靈',
+  color:'#f5b4c9', cliff:'#b88466',
+  chars:[
+    ['婚','ㄏㄨㄣ','女',11,'婚禮'],['飾','ㄕˋ','食',13,'服飾'],['郎','ㄌㄤˊ','邑',9,'新郎'],
+    ['參','ㄘㄢ','厶',11,'參加'],['響','ㄒㄧㄤˇ','音',21,'響亮'],['代','ㄉㄞˋ','人',5,'代表'],
+    ['福','ㄈㄨˊ','示',13,'祝福'],['連','ㄌㄧㄢˊ','辵',11,'連杯酒'],['酒','ㄐㄧㄡˇ','酉',10,'喝酒'],
+    ['敬','ㄐㄧㄥˋ','攴',13,'尊敬'],['藏','ㄘㄤˊ','艸',18,'藏新娘'],['俗','ㄙㄨˊ','人',9,'習俗'],
+    ['情','ㄑㄧㄥˊ','心',11,'熱情'],['互','ㄏㄨˋ','二',4,'互助'],['精','ㄐㄧㄥ','米',14,'精神']
+  ],
+  idioms:[
+    ['江郎才盡','比喻才思枯竭，寫不出好作品。','多閱讀，寫作文才不會有＿＿＿＿的時候。'],
+    ['不同凡響','比喻事物十分出色，不平凡。','這場音樂會＿＿＿＿，觀眾都拍手叫好。'],
+    ['有福同享','有好事、成果一起分享。','好朋友就是要＿＿＿＿，一起分享快樂。'],
+    ['價值連城','形容東西非常貴重。','博物館裡展出一顆＿＿＿＿的寶石。'],
+    ['相敬如賓','夫妻互相敬愛，像對待客人一樣有禮貌。','爺爺和奶奶結婚多年，一直＿＿＿＿。'],
+    ['笑裡藏刀','比喻外表和善，內心卻很陰險。','他表面上很友善，其實＿＿＿＿，要小心防備。']
+  ],
+  hand:{
+    shape:[
+      {q:'生字小偵探：哪一個字的上面「不是」草字頭「艹」？',o:['敬','藏','蓋','蔚'],ex:'「敬」的左上方看起來像「艹」，其實不是喔！'}
+    ],
+    word:[
+      {q:'「新人向親友一一敬酒」，「一一」是什麼意思？',o:['一個接一個','只有一個','大家一起','第一個'],ex:'「一一」有一個接一個的意思，比「一個接一個」更精簡。'},
+      {q:'「老師把窗戶一扇接一扇打開」可以縮寫成哪一句？',o:['老師把窗戶一一打開。','老師把窗戶打開一扇。','老師把一扇窗戶打開。','老師打開窗戶一次。'],ex:'「一扇接一扇」可以用「一一」代替。'},
+      {q:'「習俗」是什麼意思？',o:['一個地方的人長期養成的習慣和風俗','一種好吃的食物','學校的規定','一種樂器'],ex:'習俗是某地區的人們長期養成的習慣、風俗。'}
+    ],
+    sent:[
+      {q:'作者參加的是哪一族的婚禮？',o:['魯凱族','阿美族','泰雅族','布農族'],ex:'作者第一次參加魯凱族的婚禮。'},
+      {q:'婚禮的高潮是什麼？',o:['新娘站在秋千上，由新郎來回拉動','新人切蛋糕','大家放煙火','新郎騎著馬'],ex:'勇敢的新娘站在秋千上搖盪，新郎來回拉動秋千。'},
+      {q:'盪秋千結束後，新人先做什麼？',o:['喝連杯酒','跳舞','藏起來','回家'],ex:'「新人先喝連杯酒，再向親友一一敬酒。」'},
+      {q:'「先……再……」這個句型表示什麼？',o:['事情發生的先後順序','事情的原因','兩件相反的事','問一個問題'],ex:'承接複句：用「先」、「再」表示做事的順序。'},
+      {q:'哪一句「先……再……」用得正確？',o:['爺爺先照顧植物，再去公園散步。','爺爺再照顧植物，先去公園散步。','爺爺先先照顧植物再。','先爺爺再照顧植物公園。'],ex:'先做的事放在「先」後面，接著做的事放在「再」後面。'},
+      {q:'「藏新娘」的習俗是怎麼進行的？',o:['新娘被藏起來，新郎帶著親友一起找','新娘自己躲回家','大家把禮物藏起來','新郎被藏起來'],ex:'新娘被藏在部落裡，新郎和親友一起找新娘。'},
+      {q:'這場婚禮表現出魯凱族人什麼精神？',o:['愛家、互助','比賽、競爭','安靜、獨處','節省、儲蓄'],ex:'儀式充分表現出魯凱族人愛家、互助的傳統精神。'},
+      {q:'熱鬧的婚禮一直進行到什麼時候才結束？',o:['深夜','中午','清晨','傍晚'],ex:'熱鬧的婚禮一直進行到深夜才結束。'},
+      {q:'這一課的主旨是什麼？',o:['不同的族群，會用不同的方式傳達祝福','婚禮一定要盪秋千','喝酒很好玩','結婚很辛苦'],ex:'主旨：不同的族群，會用不同的方式傳達祝福的心意。'}
+    ]
+  }
+},
+{
+  n:11, title:'一路平安', genre:'記敘文', island:'平安島', spirit:'彎彎', spiritTitle:'月之精靈',
+  color:'#f7c77f', cliff:'#a7795a',
+  chars:[
+    ['除','ㄔㄨˊ','阜',10,'除夕'],['嬸','ㄕㄣˇ','女',18,'嬸嬸'],['煙','ㄧㄢ','火',13,'煙火'],
+    ['陣','ㄓㄣˋ','阜',10,'一陣風'],['附','ㄈㄨˋ','阜',8,'附近'],['店','ㄉㄧㄢˋ','广',8,'商店'],
+    ['休','ㄒㄧㄡ','人',6,'休息'],['息','ㄒㄧˊ','心',10,'休息'],['修','ㄒㄧㄡ','人',10,'修車'],
+    ['廠','ㄔㄤˇ','广',15,'修車廠'],['檢','ㄐㄧㄢˇ','木',17,'檢查'],['查','ㄔㄚˊ','木',9,'檢查'],
+    ['拖','ㄊㄨㄛ','手',8,'拖車'],['幸','ㄒㄧㄥˋ','干',8,'幸好'],['零','ㄌㄧㄥˊ','雨',13,'零件']
+  ],
+  idioms:[
+    ['斬草除根','比喻徹底除去禍根，不留後患。','為了避免疫情擴大，必須＿＿＿＿。'],
+    ['烏煙瘴氣','形容環境或氣氛黑暗混亂。','好好的聚會被他弄得＿＿＿＿，大家都沒心情了。'],
+    ['息息相關','比喻關係非常密切。','環境保護和我們的生活＿＿＿＿。'],
+    ['不修邊幅','不注重衣服、儀容的整潔。','他＿＿＿＿，頭髮亂亂的就出門了。'],
+    ['幸災樂禍','看到別人遭遇不幸，反而覺得高興。','同學跌倒時，我們不應該＿＿＿＿。'],
+    ['七零八落','形容零散、亂七八糟的樣子。','一陣大風吹來，衣服被吹得＿＿＿＿。']
+  ],
+  hand:{
+    shape:[
+      {q:'生字小偵探：「零」的下面是哪一個部件？',o:['令','今','合','全'],ex:'「零」是雨字頭，下面是「令」。'},
+      {q:'「除、陣、附」左邊的部首「阝」，是哪一個部首？',o:['阜','邑','耳','口'],ex:'在左邊的「阝」是阜部，在右邊的「阝」（像「郎」）是邑部。'}
+    ],
+    word:[
+      {q:'「修車師傅說：我來檢查看看。」「檢查」是什麼意思？',o:['仔細查看','修理好','打掃乾淨','拿走'],ex:'「檢查」是檢視、查看的意思。'},
+      {q:'「除夕」是什麼時候？',o:['農曆十二月最後一天的晚上','農曆一月一日早上','中秋節','端午節'],ex:'除夕是農曆十二月最後一天的夜晚，有團圓吃年夜飯的習俗。'},
+      {q:'「把車子拖回修車廠」，「拖」是什麼意思？',o:['拉著東西移動','用手推開','往上丟','輕輕放下'],ex:'「拖」是牽引、拉著東西走。'}
+    ],
+    sent:[
+      {q:'除夕當天，作者一家人要去哪裡過年？',o:['南部','北部','國外','山上'],ex:'除夕當天，我們要回南部過年。'},
+      {q:'車子在半路上發生了什麼事？',o:['壞了，傳出怪聲','沒有油了','撞到樹','輪胎被偷了'],ex:'車子傳出怪聲，爸爸把車子停在路邊。'},
+      {q:'「ㄎㄡ ㄉㄨㄛ ㄎㄡ ㄉㄨㄛ」是在描寫什麼聲音？',o:['車子傳出的怪聲','鞭炮聲','敲門聲','下雨聲'],ex:'用聲音的摹寫，寫出車子壞掉的怪聲。'},
+      {q:'修車師傅原本正要做什麼？',o:['關門吃年夜飯','出門旅行','去買零件','睡午覺'],ex:'修車師傅正要關門吃年夜飯，還是答應幫忙。'},
+      {q:'「除了可以見到爺爺、奶奶，還可以先去探望嬸嬸。」用了哪一個句型？',o:['除了……還……','因為……所以……','雖然……但是……','先……再……'],ex:'遞進複句：「除了」說一件事，「還」再加上更進一步的事。'},
+      {q:'哪一句和上一題的意思相同？',o:['我們不但可以見到爺爺、奶奶，還可以先去探望嬸嬸。','我們雖然見到爺爺、奶奶，但是不能探望嬸嬸。','因為見到爺爺、奶奶，所以不去探望嬸嬸。','我們只能見到爺爺、奶奶。'],ex:'「不但……還……」和「除了……還……」都表示更進一步。'},
+      {q:'「外頭有人放煙火，有人放鞭炮。」「有人……有人……」表示什麼？',o:['同一時間，不同的人做不同的事','只有一個人在做事','事情的先後順序','原因和結果'],ex:'並列複句：用「有人……有人……」說明同時發生的幾件事。'},
+      {q:'「把車子修好，你們才能回家啊！」「才能」前面說的是什麼？',o:['條件','結果','時間','地點'],ex:'條件複句：前面先提出條件，後面用「才能」說明結果。'},
+      {q:'這一課的主旨是什麼？',o:['透過溫馨的故事，理解同理心與祝福的美好','過年一定要開車','車子很容易壞掉','除夕不能出門'],ex:'主旨：透過溫馨的故事，理解同理心與祝福的美好。'}
+    ]
+  }
+},
+{
+  n:12, title:'不一樣的團圓', genre:'記敘文', island:'團圓島', spirit:'暖暖', spiritTitle:'燈之精靈',
+  color:'#c6b4f2', cliff:'#9a7a63',
+  chars:[
+    ['團','ㄊㄨㄢˊ','口',14,'團圓'],['剩','ㄕㄥˋ','刀',12,'剩下'],['默','ㄇㄛˋ','黑',16,'默默'],
+    ['樓','ㄌㄡˊ','木',15,'樓梯'],['視','ㄕˋ','見',11,'視訊'],['訊','ㄒㄩㄣˋ','言',10,'通訊'],
+    ['叔','ㄕㄨˊ','又',8,'叔叔'],['鏡','ㄐㄧㄥˋ','金',19,'鏡頭'],['逗','ㄉㄡˋ','辵',11,'逗號'],
+    ['娃','ㄨㄚˊ','女',9,'娃娃'],['壓','ㄧㄚ','土',17,'壓歲錢'],['錢','ㄑㄧㄢˊ','金',16,'存錢'],
+    ['透','ㄊㄡˋ','辵',11,'透過'],['握','ㄨㄛˋ','手',12,'握手']
+  ],
+  idioms:[
+    ['一團和氣','形容一片祥和的氣氛。','這支球隊＿＿＿＿，比賽時合作無間。'],
+    ['潛移默化','思想、性格或習慣受到影響，不知不覺起了變化。','在愛看書的家庭長大，他受到＿＿＿＿，也愛上閱讀。'],
+    ['人去樓空','舊地重遊時人事已非，表示對故人的思念。','他回到故鄉的老家，才發現已經＿＿＿＿。'],
+    ['一視同仁','平等對待，沒有差別。','老師對每位同學都＿＿＿＿。'],
+    ['破鏡重圓','比喻夫妻分開後，又重新團圓和好。','他們經過許多波折，終於＿＿＿＿。']
+  ],
+  hand:{
+    shape:[
+      {q:'我會辨字：「傳」和「團」都有哪一個部件？',o:['專','尃','車','寺'],ex:'用「專」組成的字，念起來都有ㄨㄢ的音，例如：傳、團。'},
+      {q:'我會辨字：「師傅」的「傅」，右邊是哪一個部件？',o:['尃','專','甫','寸'],ex:'「傅」的右邊是「尃」，和「專」長得很像，要分清楚。'}
+    ],
+    word:[
+      {q:'「爺爺也滿足的說」，「滿足」可以換成哪一個語詞，意思差不多？',o:['滿意','滿滿','生氣','著急'],ex:'「滿足」和「滿意」意思相同。'},
+      {q:'「我默默看著時間」，「默默」可以換成哪一個語詞？',o:['靜靜','吵吵','快快','慢慢'],ex:'「默默」和「靜靜」意思相近。'},
+      {q:'「我們利用視訊問候叔叔和嬸嬸」，「視訊」是什麼？',o:['透過螢幕看得到彼此的通話','寫信','打電報','面對面聊天'],ex:'視訊可以透過螢幕看到對方、和對方說話。'}
+    ],
+    sent:[
+      {q:'除夕夜，作者一家人趕到哪裡？',o:['爺爺家','月子中心','餐廳','修車廠'],ex:'除夕夜，我們一家人趕到爺爺家。'},
+      {q:'大家用什麼方法問候在月子中心的叔叔、嬸嬸？',o:['視訊','寫信','坐火車去看','打電報'],ex:'我們利用視訊問候叔叔和嬸嬸。'},
+      {q:'奶奶拿出什麼送給剛出生的小堂妹？',o:['壓歲錢','娃娃','蛋糕','鞭炮'],ex:'奶奶拿出壓歲錢送給小娃娃。'},
+      {q:'叔叔說：「家人在哪裡，家就在那裡。」是什麼意思？',o:['只要家人的心在一起，在哪裡都像在家','家要一直搬家','要住在月子中心','家人不能出門'],ex:'只要家人在一起，無論在什麼地方，就像在家一樣。'},
+      {q:'「沒想到透過視訊，我們全家有了不一樣的團圓！」「沒想到」表示什麼？',o:['發生了意料之外的結果','事情的原因','做事的順序','提出一個問題'],ex:'轉折複句：用「沒想到」說出和原本預想不同的結果。'},
+      {q:'「我一直堅持下去，＿會有成功的一天。」空格填哪一個最好？',o:['就','但是','因為','雖然'],ex:'承接複句：發生某件事後，「就」緊接著出現結果。'},
+      {q:'「安靜的地下室，只有我們匆匆忙忙的腳步聲。」加上「安靜的」，讓什麼感覺更強烈？',o:['匆匆忙忙','開心','肚子餓','想睡覺'],ex:'用「安靜」和「匆匆忙忙」對比，讓感覺更強烈。'},
+      {q:'「叔叔緊緊握著嬸嬸的手」，「緊緊」說明怎麼握？',o:['用力抓緊','輕輕碰一下','很快放開','用腳踩'],ex:'疊字「緊緊」形容用力、抓緊的樣子。'},
+      {q:'這一課的主旨是什麼？',o:['感受過年團圓的氣氛，學習關懷與分享','過年一定要待在家','視訊很難用','壓歲錢越多越好'],ex:'主旨：感受過年團圓的氣氛，學習關懷與分享。'}
+    ]
+  }
+}
+];
+
+// ===== 迷霧王（統整活動：擴寫句子、修改標點、意義段） =====
+const FINAL = [
+  {q:'哪一句把「斑馬跑得很快」擴寫得最生動？',o:['斑馬像一陣風，跑得實在太快了。','斑馬跑。','斑馬很快。','很快的斑馬是。'],ex:'加上比喻和語氣，句子就更豐富、有畫面。'},
+  {q:'把「風回航。」加上特色來擴寫，哪一句最好？',o:['風剛從蔚藍的大海回航。','風回航回航。','回航的風。','風回航了嗎？'],ex:'加上「蔚藍的大海」這樣的特色描寫，句子更具體。'},
+  {q:'把「我走在海邊。」加上感官描寫，哪一句最好？',o:['我走在海邊，聽見浪花一聲聲的歡唱。','我走在海邊海邊。','海邊我走。','我走在海邊，走在海邊。'],ex:'加上「聽見」等感官描寫，讀起來更有感覺。'},
+  {q:'把「寄居蟹躲回沙堆。」加上動作的樣子，哪一句最好？',o:['寄居蟹慌慌張張的躲回沙堆。','寄居蟹沙堆。','躲回寄居蟹沙堆。','寄居蟹躲回。'],ex:'加上「慌慌張張的」，寫出動作的樣子。'},
+  {q:'「我喜歡蘋果＿香蕉和葡萄。」空格要用什麼標點？',o:['頓號（、）','句號（。）','問號（？）','驚嘆號（！）'],ex:'同類的語詞要用頓號隔開。'},
+  {q:'「天黑了＿路上的車子少了。」空格要用什麼標點？',o:['逗號（，）','頓號（、）','句號（。）','引號（「」）'],ex:'句子還沒說完，中間停頓用逗號。'},
+  {q:'一句完整的話說完了，最後要用什麼標點？',o:['句號（。）','逗號（，）','頓號（、）','冒號（：）'],ex:'完整的句子說完，用句號作結。'},
+  {q:'哪一句的標點符號全部正確？',o:['媽媽買了白菜、蘿蔔和番茄。','媽媽買了白菜，蘿蔔、和番茄。','媽媽、買了白菜。蘿蔔和番茄','媽媽買了白菜。蘿蔔，和番茄、'],ex:'同類語詞用頓號，句子說完用句號。'},
+  {q:'哪一句是有「誰＋做什麼」的完整句子？',o:['弟弟在公園放風箏。','在公園。','放風箏的。','因為弟弟。'],ex:'有「誰」又有「做什麼」，才是完整的句子。'},
+  {q:'把重點相同的自然段合在一起，就形成什麼？',o:['意義段','自然段','標題','句子'],ex:'重點相同的自然段合併，就是「意義段」。'},
+  {q:'哪一段描寫景物有順序？',o:['走進公園，先看到噴水池，再往前走是花圃，最後來到大樹下。','大樹下，噴水池，花圃，公園。','我最後走進公園，先看到大樹。','花圃很漂亮，大樹也很漂亮。'],ex:'依照行走的順序描寫景物，讀者就能跟著你的腳步看風景。'},
+  {q:'爸爸說＿「我們出發吧！」空格要用什麼標點？',o:['冒號（：）','頓號（、）','句號（。）','逗號（，）'],ex:'說話的內容前面要用冒號，再用引號把話框起來。'}
+];
+
+const STORY = {
+  prologue:[
+    ['owl','你好！我是貓頭鷹文文，守護島的嚮導。'],
+    ['owl','我們的島嶼被一層迷霧籠罩了。這些迷霧，是由「被遺忘的字」凝結成的。'],
+    ['owl','六座島上的精靈都睡著了，花不開、燈不亮，連人們之間的溫暖也被遮住了。'],
+    ['owl','只要你認真認識每一個字、每一個句子，就能驅散迷霧，喚醒精靈！'],
+    ['owl','答錯的題目會變成迷霧留在島上，記得回來「驅散迷霧」喔！'],
+    ['owl','準備好了嗎？{name}守護者，我們出發吧！']
+  ],
+  intro:[
+    [['owl','這裡是微風島。以前，風會把大海、山坡和原野的味道，帶到每個角落。'],['sleep0','呼……呼……'],['owl','迷霧把風困住了！完成四個關卡，喚醒風之精靈嵐嵐吧！']],
+    [['owl','潮汐島的沙灘上到處是紙杯和瓶蓋，寄居蟹找不到新家了！'],['sleep1','呼……呼……'],['owl','潮之精靈殼殼被迷霧困住了，我們快去幫忙！']],
+    [['owl','古道上的路標被迷霧遮住，旅人都迷路了。'],['sleep2','呼……呼……'],['owl','一邊是山，一邊是海。林之精靈森森就在古道深處！']],
+    [['owl','從這裡開始，我們要守護的不只是自然，還有人們的祝福。'],['sleep3','呼……呼……'],['owl','祝福島上的婚禮被迷霧籠罩，秋千停下來了！快喚醒花之精靈朵朵！']],
+    [['owl','除夕夜，回家的路被迷霧遮住，車子也拋錨了。'],['sleep4','呼……呼……'],['owl','月之精靈彎彎能照亮回家的路，快喚醒她！']],
+    [['owl','最後一座島了！家家戶戶的燈都熄了，大家沒辦法團圓。'],['sleep5','呼……呼……'],['owl','燈之精靈暖暖在等你，加油！']]
+  ],
+  clear:[
+    [[0,'呼～我醒來了！謝謝你，守護者。'],[0,'閉上眼，深呼吸……你聞到大海淡淡的鹹味了嗎？'],[0,'帶著風之光，前往潮汐島吧！']],
+    [[1,'謝謝你帶走了垃圾、留下了貝殼！'],[1,'小寄居蟹們終於有新家了。記得喔，愛護海灘，就是愛護大家的家。']],
+    [[2,'路又出現了！謝謝你，守護者。'],[2,'只能拍照，不能帶走，美石和美景才能長久。'],[2,'接下來的島嶼，要守護的是人和人之間的溫暖喔！']],
+    [[3,'秋千又盪起來了！大家一起唱歌、跳舞，把祝福送給新人。'],[3,'愛家、互助的心，就是最溫暖的光。']],
+    [[4,'路燈一盞盞亮起來了！謝謝你像修車師傅一樣熱心幫忙。'],[4,'祝你一路平安，新年快樂！']],
+    [[5,'燈亮了！不論在哪裡，只要心連在一起，就是團圓。'],[5,'家人在哪裡，家就在那裡。'],['owl','六座島都恢復光芒了……可是，迷霧的源頭還在！看，地圖中間的迷霧島出現了！']]
+  ],
+  finalIntro:[['owl','迷霧的源頭──迷霧王出現了！'],['king','哼哼！擴寫句子、標點符號，你都會嗎？'],['owl','用你學會的本領，把迷霧王打散吧！']],
+  finalClear:[['king','啊……我、我變成一陣輕煙了……'],['owl','你做到了！守護島完全恢復了光芒。'],['owl','{name}，你是真正的國語守護者！']]
+};
+</script>
+<script>// ===== 補充題庫：依翰林三上國語第7～12課評量卷改編 =====
+// 〔字〕會以紅色底線標出（改錯字題用）
+const EXTRA = [
+{ // 第7課
+  read:[
+    {q:'「幾隻哈士奇拉著雪＿，乘風向前奔跑。」空格是哪個字？',o:['橇','撬','翹','喬'],ex:'雪橇的「橇」是木部，念ㄑㄧㄠ。'},
+    {q:'「＿香濃郁的東坡肉，讓人吃了齒頰留香。」空格念ㄒㄧㄢˊ，是哪個字？',o:['鹹','嫌','減','喊'],ex:'鹹味的「鹹」，部首是鹵。'}
+  ],
+  shape:[
+    {q:'改錯字：「豪華郵輪正〔杭〕行在大海上。」畫線的字應該改成？',o:['航','杭','抗','坑'],ex:'船在水上行駛是「航行」，舟部的「航」。'},
+    {q:'改錯字：「我們靜靜的〔新〕賞眼前的大海。」畫線的字應該改成？',o:['欣','新','心','辛'],ex:'「欣賞」的「欣」是欠部。'},
+    {q:'改錯字：「靜靜的欣〔賓〕一望無際的大海。」畫線的字應該改成？',o:['賞','賓','嘗','償'],ex:'「欣賞」的「賞」，下面是貝。'},
+    {q:'改錯字：「〔閑〕起雙眼，讓美好的記憶留在心裡。」畫線的字應該改成？',o:['閉','閑','閃','問'],ex:'「閉起雙眼」的「閉」，門裡面是「才」。'},
+    {q:'改錯字：「讓這段記憶留在心〔琛〕處。」畫線的字應該改成？',o:['深','琛','探','參'],ex:'「心深處」的「深」是水部。'}
+  ],
+  word:[
+    {q:'「外面剛剛下了一場雨。」「剛剛」可以換成哪個語詞，意思不變？',o:['剛才','等一下','明天','很久以前'],ex:'「剛剛」和「剛才」意思相近。'},
+    {q:'「閉上眼睛」的「閉上」，意思和哪一個語詞相反？',o:['睜開','閉起','合上','關上'],ex:'「閉上」和「睜開」是相反詞。'},
+    {q:'「我聞到淡淡的花香。」「淡淡」的相反詞是？',o:['濃濃','輕輕','香香','慢慢'],ex:'「淡淡」和「濃濃」意思相反。'},
+    {q:'下面哪一個情境「不可以」用「清新」來形容？',o:['這家店的餐點好吃，價錢又實惠','剛下過雨，空氣聞起來的感覺','妹妹剪掉長髮，看起來很有精神','她換穿學生風格，給人青春的感覺'],ex:'「清新」形容清爽新鮮的感覺，不能形容餐點便宜好吃。'},
+    {q:'下面哪一個選項「沒有」形容詞？',o:['她總是將頭髮綁成馬尾','媽媽的頭髮又黑又長','好像美麗的絲綢','一晃一晃的馬尾像調皮的小貓'],ex:'「黑、長、美麗、調皮」都是形容詞，「綁成馬尾」沒有形容詞。'},
+    {q:'短語練習：「冰涼的雪花」，哪一個也是「形容詞＋的＋名詞」？',o:['炎熱的夏天','夏天的炎熱','炎熱夏天的','的夏天炎熱'],ex:'「炎熱」形容「夏天」，寫成「炎熱的夏天」。'}
+  ],
+  sent:[
+    {q:'課文中，描寫風的動作都和人一樣，這是什麼寫作技巧？',o:['擬人','譬喻','設問','借代'],ex:'把風寫得像人一樣會流浪、打滾，是擬人法。'},
+    {q:'下面哪一句「沒有」運用擬人的寫作技巧？',o:['身上有冰涼的雪花','風到處流浪','風乘著雪橇由山坡滑下','風在原野上快樂的打滾'],ex:'「冰涼的雪花」只是描寫雪花，沒有把東西寫成人。'},
+    {q:'課文中，為什麼沒有人知道風去過什麼地方？',o:['因為他沒有固定的居所','因為沒有人關心他','因為他沒有朋友','因為他不和大家聯絡'],ex:'風到處流浪，沒有固定住的地方。'},
+    {q:'重組句子：哪一句的順序最通順？',o:['風的身上有清新的草香，我知道他剛剛在原野上快樂的打滾。','我知道風的身上，他剛剛有清新的草香在原野上快樂的打滾。','他剛剛在原野上快樂的打滾，風的身上我知道有清新的草香。','有清新的草香風的身上，我知道在原野上他剛剛快樂的打滾。'],ex:'先說發現（有草香），再說推想（在原野打滾）。'}
+  ]
+},
+{ // 第8課
+  read:[
+    {q:'哪一個「應」的讀音和其他三個不同？',o:['應答','應該','應當','理應'],ex:'「應答」的應念ㄧㄥˋ，其他念ㄧㄥ。'},
+    {q:'「你要＿棉被，以免著涼。」空格念ㄍㄞˋ，是哪個字？',o:['蓋','該','概','丐'],ex:'「蓋棉被」的「蓋」是艸部。'},
+    {q:'「我把手機的外＿摔壞了。」空格念ㄎㄜˊ，是哪個字？',o:['殼','克','刻','咳'],ex:'外殼、貝殼的「殼」。'}
+  ],
+  shape:[
+    {q:'改錯字：「媽媽把玫瑰花插在花〔拼〕裡。」畫線的字應該改成？',o:['瓶','拼','屏','餅'],ex:'「花瓶」的「瓶」是瓦部。'},
+    {q:'改錯字：「她立〔至〕長大要成為消防員。」畫線的字應該改成？',o:['志','至','只','止'],ex:'「立志」的「志」是心部。'},
+    {q:'改錯字：「請還給我們一個乾〔靜〕的地球。」畫線的字應該改成？',o:['淨','靜','境','近'],ex:'「乾淨」的「淨」是水部。'},
+    {q:'改錯字：「請大家回到自己的〔立〕置上。」畫線的字應該改成？',o:['位','立','味','為'],ex:'「位置」的「位」是人部。'},
+    {q:'改錯字：「我們和鄰〔局〕平時會守望相助。」畫線的字應該改成？',o:['居','局','據','拘'],ex:'「鄰居」的「居」，和寄居蟹的「居」一樣。'}
+  ],
+  word:[
+    {q:'語詞接龍：紙杯 → 杯＿ → ＿牢，空格填哪個字？',o:['套','子','墊','底'],ex:'紙杯 → 杯套 → 套牢。'},
+    {q:'語詞接龍：愛護 → 護＿ → ＿生，空格填哪個字？',o:['衛','理','士','送'],ex:'愛護 → 護衛 → 衛生。'},
+    {q:'「墾丁的＿＿上正舉辦一場音樂盛會。」',o:['海灘','歡呼','竟然','欣賞'],ex:'音樂會辦在「海灘」上。'},
+    {q:'「大家聚精會神的＿＿精彩的演出。」',o:['欣賞','亂丟','竟然','海灘'],ex:'聚精會神的「欣賞」演出。'},
+    {q:'「觀眾時而為臺上的表演大聲＿＿。」',o:['歡呼','欣賞','亂丟','海灘'],ex:'大聲「歡呼」。'},
+    {q:'「散場後，沒公德心的觀眾＿＿把垃圾亂丟在沙灘上。」',o:['竟然','欣賞','歡呼','海灘'],ex:'「竟然」表示出乎意料。'},
+    {q:'「母親把希望＿託在孩子身上。」空格填哪個字？',o:['寄','拜','推','請'],ex:'「寄託」是把希望或心意放在某人身上。'},
+    {q:'短語練習：「慌慌張張的躲回沙堆」，哪一組也是同樣的寫法？',o:['急急忙忙的跑進教室','教室的急急忙忙跑進','跑進急急忙忙的教室','急急忙忙教室的跑進'],ex:'疊字＋的＋動作＋地方。'}
+  ],
+  sent:[
+    {q:'請選出「錯誤」的敘述。',o:['「淨灘」是指骯髒的海灘','「愛護」是指愛惜保護','「瓶蓋」是名詞','「慌張」和「緊張」是相似詞'],ex:'「淨灘」是清理海灘的垃圾。'},
+    {q:'「是什麼東西卡住我了？」用了設問。哪一句「沒有」用設問？',o:['天色已經很晚了，我們趕快回家。','你想不想到我家來玩？','如果失去了健康，賺再多錢有用嗎？','快輪到你上臺了，你難道不緊張嗎？'],ex:'沒有提出問題的句子，就沒有用設問。'},
+    {q:'課文中，寄居蟹的殼到哪裡去了？',o:['被人類拿走了','被石頭撞破了','被小螃蟹偷走了','被海浪沖走了'],ex:'貝殼被人類撿走，寄居蟹只好住瓶蓋。'},
+    {q:'要愛惜大自然，下面哪一個想法「不恰當」？',o:['海灘只要靠志工來維持整潔就好','不要拿走貝殼','帶走自己的垃圾','參加淨灘活動'],ex:'愛護海灘是每個人的責任，不能只靠志工。'}
+  ]
+},
+{ // 第9課
+  read:[
+    {q:'哪一組「」中的字，注音相同？',o:['「長」久／「長」度','「挑」撥／「挑」夫','「曲」子／彎「曲」','「要」道／「要」求'],ex:'長久、長度的「長」都念ㄔㄤˊ。'},
+    {q:'「棧道」的「棧」怎麼念？',o:['ㄓㄢˋ','ㄗㄢˋ','ㄐㄧㄢˋ','ㄔㄢˋ'],zo:true,ex:'「棧」念ㄓㄢˋ，不是ㄗㄢˋ。'}
+  ],
+  shape:[
+    {q:'改錯字：「如流水〔船〕的時間。」畫線的字應該改成？',o:['般','船','搬','盤'],ex:'「像……一般」的「般」是舟部。'},
+    {q:'改錯字：「請你把這篇文章〔頭〕稿到校刊。」畫線的字應該改成？',o:['投','頭','偷','透'],ex:'「投稿」的「投」是手部。'},
+    {q:'改錯字：「〔郊〕稿期限前，請放回老師桌上。」畫線的字應該改成？',o:['交','郊','教','膠'],ex:'「交稿」的「交」是亠部。'},
+    {q:'「小狗玩水玩夠了，就會自己游上＿。」空格填哪個字？',o:['岸','岩','崖','炭'],ex:'水邊的陸地叫「岸」。'},
+    {q:'「我們＿途唱著歌，不知不覺就到山頂了。」空格填哪個字？',o:['沿','前','用','長'],ex:'「沿途」是一路上的意思。'}
+  ],
+  word:[
+    {q:'「哥哥知道，只有不斷接受不同的＿＿，才能使自己更強壯。」',o:['挑戰','可不是','意想不到','變成'],ex:'接受「挑戰」。'},
+    {q:'「這＿＿一條輕鬆的路，卻是通往成功之路。」',o:['可不是','挑戰','變成','意想不到'],ex:'「可不是」就是「並不是」的意思。'},
+    {q:'「勝利會在你＿＿的時刻，給你一份驚喜。」',o:['意想不到','挑戰','可不是','變成'],ex:'沒有想到的時候，就是「意想不到」。'},
+    {q:'哪一個語詞替換後，意思會改變？',o:['天空「突然」下起雨→「果然」','我們「隨著」老師去淨灘→「跟著」','這不是「一般」的鋼筆→「普通」','最「著名」的畫→「有名」'],ex:'「突然」是沒想到，「果然」是和想的一樣，意思不同。'},
+    {q:'下面哪一組是相反詞？',o:['著名／無名','突然／忽然','一般／普通','隨著／跟著'],ex:'「著名」是很有名，「無名」是沒有名氣。'},
+    {q:'短語練習：「浪花一曲曲輕唱」，哪一組也是同樣的寫法？',o:['花瓣一片片掉落','一片片花瓣的掉落','掉落花瓣一片片','花瓣掉落的一片片'],ex:'名詞＋疊字量詞＋動作。'}
+  ],
+  sent:[
+    {q:'課文中，古道一路上可以看到什麼風景？',o:['一邊是山，一邊是海','神木群','一望無際的沙漠','林立的高樓'],ex:'阿塱壹古道一邊是山，一邊是海。'},
+    {q:'「風呼呼的吹來」用了哪一種摹寫？',o:['聽覺摹寫','視覺摹寫','嗅覺摹寫','味覺摹寫'],ex:'「呼呼」是聽到的聲音，是聽覺摹寫。'},
+    {q:'請選出「正確」的敘述。',o:['「著名」和「無名」是相反詞','漂亮的南田石可以帶回家收藏','「捲起」是名詞','「棧」念ㄗㄢˋ'],ex:'南田石不能帶走；「捲起」是動作；「棧」念ㄓㄢˋ。'},
+    {q:'「你要達到教練的要求，才可以加入校隊。」「才」前面說的是什麼？',o:['要達到的條件','發生的結果','時間','地點'],ex:'條件句：先達到條件，「才」會有後面的結果。'}
+  ]
+},
+{ // 第10課
+  read:[
+    {q:'哪一個字的讀音和「精」相同？',o:['大眼「睛」','「清」楚','「晴」天','「請」客'],ex:'「精」和「睛」都念ㄐㄧㄥ。'},
+    {q:'「這對新人真是＿才女貌。」空格念ㄌㄤˊ，是哪個字？',o:['郎','朗','浪','狼'],ex:'「郎才女貌」的「郎」，和新郎的「郎」一樣。'},
+    {q:'「媽媽買了許多髮＿。」空格念ㄕˋ，是哪個字？',o:['飾','式','試','室'],ex:'「髮飾」的「飾」是食部。'},
+    {q:'「他今天打扮得有點＿氣。」空格念ㄙㄨˊ，是哪個字？',o:['俗','速','素','宿'],ex:'「俗氣」的「俗」，和習俗的「俗」一樣。'},
+    {q:'「請幫我＿領包裹。」空格念ㄉㄞˋ，是哪個字？',o:['代','帶','待','袋'],ex:'替別人去領，是「代領」。'}
+  ],
+  shape:[
+    {q:'「惜」的部首是什麼？',o:['心','日','木','土'],ex:'「惜」的部首是心（忄）。'}
+  ],
+  word:[
+    {q:'「運動會上，大家發揮運動家＿＿，盡全力比賽。」',o:['精神','祝福','結束','安排'],ex:'發揮運動家「精神」。'},
+    {q:'「運動會＿＿後，我們拖著疲累的身體回家。」',o:['結束','精神','祝福','安排'],ex:'活動「結束」後回家。'},
+    {q:'「賓客向新人獻上真摯的＿＿。」',o:['祝福','結束','精神','安排'],ex:'向新人獻上「祝福」。'},
+    {q:'「主辦單位為選手＿＿了舒適的住處。」',o:['安排','祝福','精神','結束'],ex:'「安排」住處。'},
+    {q:'下面哪一組是相反詞？',o:['珍惜／鄙棄','祝福／祝賀','互助／幫忙','熱情／熱心'],ex:'「珍惜」是愛護，「鄙棄」是看不起而丟棄。'},
+    {q:'短語練習：「熱熱鬧鬧的找回新娘」，哪一組也是同樣的寫法？',o:['慌慌張張的逃出倉庫','倉庫的慌慌張張逃出','逃出慌慌張張的倉庫','慌慌張張倉庫的逃出'],ex:'疊字＋的＋動作＋對象。'}
+  ],
+  sent:[
+    {q:'下面哪一個句子的意思「不合理」？',o:['弟弟第一次嘗試溜冰，早已駕輕就熟。','我和媽媽分工合作，將窗簾一一裝好。','音樂聲響起，我們跟著旋律又唱又跳。','新娘站在秋千上，新郎來回拉動秋千。'],ex:'第一次溜冰，不可能「駕輕就熟」。'},
+    {q:'哪一句話有多餘的字詞？',o:['阿姨穿著純白的禮服裝。','今天我和爸爸媽媽一起去阿姨的婚禮。','阿姨看起來像美麗的仙女。','婚禮結束，我還和阿姨拍了一張合照呢！'],ex:'「禮服」就是衣服，不用再加「裝」。'},
+    {q:'課文中，秋千盪得越高，表示什麼？',o:['新娘越勇敢','新郎越強壯','婚姻越美滿','嫁妝越豐厚'],ex:'秋千盪得越高，代表新娘越勇敢。'},
+    {q:'魯凱族「藏新娘」的習俗，背後有什麼含意？',o:['希望新郎學會更珍惜新娘','告訴新人婚姻要包容尊重','感念族人的互助互愛','祈求婚禮順利進行'],ex:'辛苦找回新娘，是希望新郎更珍惜她。'},
+    {q:'哥哥整理好書包後才去睡覺，用「先……再……」怎麼說？',o:['哥哥先整理書包，再上床睡覺。','哥哥先上床睡覺，再整理書包。','哥哥再整理書包，先上床睡覺。','哥哥整理書包先，睡覺再。'],ex:'先做的事放在「先」後面。'}
+  ]
+},
+{ // 第11課
+  read:[
+    {q:'「你為什麼在嘆＿呢？」空格念ㄒㄧˊ，是哪個字？',o:['息','習','席','惜'],ex:'「嘆息」的「息」，和休息的「息」一樣。'},
+    {q:'「修、條、候」長得很像。「條紋」的「條」怎麼念？',o:['ㄊㄧㄠˊ','ㄒㄧㄡ','ㄏㄡˋ','ㄊㄧㄠ'],zo:true,ex:'條紋的「條」念ㄊㄧㄠˊ。'},
+    {q:'「修、條、候」長得很像。「時候」的「候」怎麼念？',o:['ㄏㄡˋ','ㄒㄧㄡ','ㄊㄧㄠˊ','ㄏㄡˊ'],zo:true,ex:'時候的「候」念ㄏㄡˋ。'},
+    {q:'「全家到速食＿享用晚餐。」空格念ㄉㄧㄢˋ，是哪個字？',o:['店','電','點','典'],ex:'商店的「店」是广部。'}
+  ],
+  shape:[
+    {q:'改錯字：「這是一家製作橡皮擦的工〔敞〕。」畫線的字應該改成？',o:['廠','敞','場','長'],ex:'「工廠」的「廠」是广部。'},
+    {q:'改錯字：「剛剛下了一場雷〔陳〕雨。」畫線的字應該改成？',o:['陣','陳','鎮','真'],ex:'「雷陣雨」的「陣」，右邊是車。'},
+    {q:'改錯字：「爺爺終於退〔体〕了。」畫線的字應該改成？',o:['休','体','修','付'],ex:'「退休」的「休」，右邊是木。'},
+    {q:'改錯字：「市民都期待跨年夜的〔湮〕火秀。」畫線的字應該改成？',o:['煙','湮','淹','焉'],ex:'「煙火」的「煙」是火部。'},
+    {q:'改錯字：「我和爸媽到臺東拜訪〔藩〕婆。」畫線的字應該改成？',o:['嬸','藩','審','嫂'],ex:'「嬸婆」的「嬸」是女部。'},
+    {q:'改錯字：「有些同學在教室裡〔施〕地。」畫線的字應該改成？',o:['拖','施','托','脫'],ex:'「拖地」的「拖」是手部。'},
+    {q:'哪一個字的部首和其他三個不同？',o:['鈴','零','雲','雷'],ex:'「鈴」是金部，其他都是雨部。'}
+  ],
+  word:[
+    {q:'「爸爸看到紅燈，連忙踩煞車。」「連忙」可以換成？',o:['趕緊','客氣','附近','探望'],ex:'「連忙」和「趕緊」意思相近。'},
+    {q:'「他為人有禮，態度和善。」「有禮」可以換成？',o:['客氣','趕緊','幸好','附近'],ex:'「有禮」和「客氣」意思相近。'},
+    {q:'「我們的社區，鄰近有許多商店。」「鄰近」可以換成？',o:['附近','客氣','幸好','探望'],ex:'「鄰近」和「附近」意思相近。'},
+    {q:'「突然下大雨，還好我有帶雨傘。」「還好」可以換成？',o:['幸好','趕緊','客氣','探望'],ex:'「還好」和「幸好」意思相近。'},
+    {q:'「志工會定期看望獨居的長者。」「看望」可以換成？',o:['探望','附近','趕緊','幸好'],ex:'「看望」和「探望」意思相近。'},
+    {q:'短語練習：「車子傳出一陣陣奇怪的聲音」，哪一組也是同樣的寫法？',o:['腦中閃過一幕幕有趣的畫面','一幕幕腦中有趣的閃過畫面','有趣的畫面閃過腦中一幕幕','畫面有趣的一幕幕閃過腦中'],ex:'誰＋動作＋疊字量詞＋形容詞的東西。'}
+  ],
+  sent:[
+    {q:'下面哪一個句子的意思「不合理」？',o:['老闆很客氣，所以大家都不喜歡跟他買東西。','上學快遲到了，小明急忙拿起書包出門。','機器傳來奇怪的聲音，不久便故障了。','天黑了，店家都關門了。'],ex:'老闆客氣，大家應該會喜歡跟他買東西才對。'},
+    {q:'根據課文，下面哪一個敘述是「錯誤」的？',o:['爸爸打電話請人來檢查車子','主角一家人在晚上趕路','路上車子很少，大家都在準備過年','車子在半路壞掉了'],ex:'課文中沒有打電話請人來檢查。'},
+    {q:'「幸好，爸爸的車子只有一個小零件壞了。」這句話是什麼心情？',o:['慶幸','難過','憤怒','興奮'],ex:'「幸好」表示覺得很慶幸。'},
+    {q:'「除了要寫作業，還要去圖書館還書。」用了哪一個句型？',o:['除了……還……','因為……所以……','先……再……','雖然……但是……'],ex:'「除了……還……」表示更進一步。'}
+  ]
+},
+{ // 第12課
+  read:[
+    {q:'「堂弟＿著拳頭呵呵笑。」空格念ㄨㄛˋ，是哪個字？',o:['握','我','臥','屋'],ex:'「握拳」的「握」是手部。'},
+    {q:'「爸爸＿過鏡頭捕捉幸福的畫面。」空格念ㄊㄡˋ，是哪個字？',o:['透','頭','投','偷'],ex:'「透過」的「透」是辵部。'},
+    {q:'「除夕夜時，全家＿聚在客廳中。」空格念ㄊㄨㄢˊ，是哪個字？',o:['團','圓','湍','傳'],ex:'「團聚」的「團」是口部。'}
+  ],
+  shape:[
+    {q:'改錯字：「姐姐收到同學結婚的喜〔汛〕。」畫線的字應該改成？',o:['訊','汛','迅','巡'],ex:'「喜訊」的「訊」是言部。'},
+    {q:'改錯字：「弟弟用直尺將黏土〔厭〕扁。」畫線的字應該改成？',o:['壓','厭','鴨','押'],ex:'「壓扁」的「壓」下面是土。'},
+    {q:'改錯字：「他提著菜籃爬到四〔摟〕。」畫線的字應該改成？',o:['樓','摟','婁','簍'],ex:'「四樓」的「樓」是木部。'},
+    {q:'改錯字：「把〔乘〕菜放入冰箱，可以避免變質。」畫線的字應該改成？',o:['剩','乘','勝','聖'],ex:'「剩菜」的「剩」右邊是刀（刂）。'},
+    {q:'改錯字：「媽媽提醒我不要亂花零用〔淺〕。」畫線的字應該改成？',o:['錢','淺','前','線'],ex:'「零用錢」的「錢」是金部。'},
+    {q:'猜字謎：「黑色的小狗」是哪個字？',o:['默','點','墨','黠'],ex:'黑＋犬＝默。'},
+    {q:'猜字謎：「單手蓋房屋」是哪個字？',o:['握','屋','捉','擇'],ex:'手（扌）＋屋＝握。'},
+    {q:'猜字謎：「令人討厭的土堆」是哪個字？',o:['壓','厭','堆','壤'],ex:'厭＋土＝壓。'},
+    {q:'哪一個字的部首和其他三個不同？',o:['看','視','親','觀'],ex:'「看」是目部，其他都是見部。'}
+  ],
+  word:[
+    {q:'「她抱著禮物，臉上露出＿＿的笑容。」',o:['滿足','客廳','車窗','好不容易'],ex:'露出「滿足」的笑容。'},
+    {q:'「搭火車時，我喜歡看＿＿外的風景。」',o:['車窗','客廳','滿足','好不容易'],ex:'看「車窗」外的風景。'},
+    {q:'「哥哥花了好長的時間，＿＿＿＿才拼完巨大的拼圖。」',o:['好不容易','滿足','車窗','客廳'],ex:'花了很多力氣才做到，就是「好不容易」。'},
+    {q:'「小明默默的離開了。」「默默」是什麼意思？',o:['沉靜不說話','快速的','小心翼翼的','偷偷的'],ex:'「默默」是安靜不出聲的樣子。'},
+    {q:'短語練習：「長長的雨絲落在車窗上」，哪一組也是同樣的寫法？',o:['圓圓的葡萄掛在藤架上','藤架上的圓圓掛在葡萄','掛在圓圓的葡萄藤架上','葡萄的圓圓掛在藤架上'],ex:'疊字＋的＋東西＋動作＋地方。'}
+  ],
+  sent:[
+    {q:'下面哪一個句子的意思「不合理」？',o:['這裡的空間很大，大家都擠在一起了。','快要遲到了，我們匆匆忙忙的準備出門。','圖書館不能大聲喧譁，請保持安靜。','陳阿姨待人親切，所以人緣很好。'],ex:'空間很大，就不會擠在一起。'},
+    {q:'下面哪一個情境可以用「團圓」來形容？',o:['在外地工作的家人，過年回家一起吃飯','好久不見的同學在路上偶遇','初次見面的兩人一見如故','畢業生回到學校看老師'],ex:'「團圓」是指家人分開後又聚在一起。'},
+    {q:'課文中，大家在哪裡看到剛出生的小堂妹？',o:['在鏡頭的另一邊','在爺爺家的客廳','在火車上','在學校'],ex:'透過視訊，在鏡頭的另一邊看到小堂妹。'},
+    {q:'奶奶拿出的，是小堂妹的第幾份壓歲錢？',o:['第一份','第二份','第三份','最後一份'],ex:'剛出生的小堂妹，收到第一份壓歲錢。'}
+  ]
+}
+];
+EXTRA.forEach((ex,i)=>Object.keys(ex).forEach(k=>{L[i].hand[k]=(L[i].hand[k]||[]).concat(ex[k]);}));
+</script>
+<script>// ===== 幾何切面低多邊形美術 =====
+function rng(seed){let a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+function hex2rgb(h){h=h.replace('#','');return[parseInt(h.substr(0,2),16),parseInt(h.substr(2,2),16),parseInt(h.substr(4,2),16)];}
+function shade(hex,f){const c=hex2rgb(hex);const t=f>0?255:0,p=Math.min(1,Math.abs(f));return'#'+c.map(v=>Math.round(v+(t-v)*p).toString(16).padStart(2,'0')).join('');}
+function pts(a){return a.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');}
+function poly(p,fill,extra=''){return`<polygon points="${pts(p)}" fill="${fill}" stroke="${fill}" stroke-width=".7" stroke-linejoin="round" ${extra}/>`;}
+
+// 低多邊形色塊（外圈＋內圈＋中心三角化）
+function blob(cx,cy,rx,ry,col,seed,n=12,amp=0.22){
+  const R=rng(seed),O=[],I=[];
+  for(let k=0;k<n;k++){const a=k/n*Math.PI*2-Math.PI/2;const j=0.9+R()*0.16;O.push([cx+Math.cos(a)*rx*j,cy+Math.sin(a)*ry*j]);
+    const j2=0.5+R()*0.12;I.push([cx+Math.cos(a+Math.PI/n)*rx*j2,cy+Math.sin(a+Math.PI/n)*ry*j2]);}
+  let s='';
+  const tri=p=>{const mx=(p[0][0]+p[1][0]+p[2][0])/3,my=(p[0][1]+p[1][1]+p[2][1])/3;
+    const d=((cx-mx)/rx*0.6+(cy-my)/ry*0.6);s+=poly(p,shade(col,d*amp+(R()-0.5)*0.09));};
+  for(let k=0;k<n;k++){const k2=(k+1)%n;tri([O[k],O[k2],I[k]]);tri([I[k],O[k2],I[k2]]);tri([[cx,cy],I[k],I[k2]]);}
+  return{svg:s,O};
+}
+
+function islandSVG(cx,cy,rx,ry,col,cliff,seed){
+  const R=rng(seed+7);const top=blob(cx,cy,rx,ry,col,seed,14,0.25);
+  let s=`<ellipse cx="${cx}" cy="${cy+ry*0.55}" rx="${rx*1.12}" ry="${ry*0.75}" fill="#ffffff" opacity=".35"/>`;
+  // 懸崖面
+  const O=top.O,h=ry*0.75;
+  for(let k=0;k<O.length;k++){const a=O[k],b=O[(k+1)%O.length];if(a[1]<cy-ry*0.05&&b[1]<cy-ry*0.05)continue;
+    const a2=[cx+(a[0]-cx)*0.82,a[1]+h],b2=[cx+(b[0]-cx)*0.82,b[1]+h];
+    const f=(a[0]<cx?-0.05:-0.25);
+    s+=poly([a,b,b2],shade(cliff,f+(R()-0.5)*0.1));s+=poly([a,b2,a2],shade(cliff,f-0.08+(R()-0.5)*0.1));}
+  return s+top.svg;
+}
+
+function pine(x,y,s,c){const t=[x,y-62*s],l=[x-22*s,y],r=[x+22*s,y],m=[x,y-4*s];
+  return poly([[x-3*s,y],[x+3*s,y],[x+3*s,y+8*s],[x-3*s,y+8*s]],'#7a5640')+poly([t,l,m],shade(c,0.12))+poly([t,m,r],shade(c,-0.15))
+  +poly([[x,y-80*s],[x-15*s,y-34*s],[x,y-38*s]],shade(c,0.2))+poly([[x,y-80*s],[x,y-38*s],[x+15*s,y-34*s]],shade(c,-0.08));}
+function roundTree(x,y,s,c,seed){return poly([[x-3*s,y],[x+3*s,y],[x+3*s,y-18*s],[x-3*s,y-18*s]],'#7a5640')+blob(x,y-34*s,20*s,20*s,c,seed,7,0.35).svg;}
+function rock(x,y,s,c='#b9b4c4',seed=3){return blob(x,y,14*s,9*s,c,seed,6,0.4).svg;}
+function stones(x,y,s){return rock(x,y,s*1.2,'#c9c3d3',11)+rock(x+2*s,y-11*s,s*0.9,'#b3adc0',12)+rock(x-1*s,y-20*s,s*0.65,'#d6d1df',13);}
+function flower(x,y,s,c){let o='';for(let k=0;k<5;k++){const a=k/5*Math.PI*2;o+=poly([[x,y],[x+Math.cos(a)*6*s,y+Math.sin(a)*6*s],[x+Math.cos(a+1.25)*6*s,y+Math.sin(a+1.25)*6*s]],shade(c,k%2?0.15:-0.1));}return o+`<circle cx="${x}" cy="${y}" r="${2*s}" fill="#ffe27a"/>`;}
+function house(x,y,s,wall,roof,lit=true){const w=26*s,h=20*s,d=12*s;
+  return poly([[x-w,y],[x,y],[x,y-h],[x-w,y-h]],shade(wall,0.1))+poly([[x,y],[x+d,y-6*s],[x+d,y-h-6*s],[x,y-h]],shade(wall,-0.18))
+  +poly([[x-w-3*s,y-h],[x+2*s,y-h],[x-w/2,y-h-16*s]],shade(roof,0.12))+poly([[x+2*s,y-h],[x+d+2*s,y-h-6*s],[x-w/2+d,y-h-22*s],[x-w/2,y-h-16*s]],shade(roof,-0.15))
+  +`<rect x="${x-w+5*s}" y="${y-h+5*s}" width="${7*s}" height="${7*s}" fill="${lit?'#ffe58a':'#6d6a80'}"/><rect x="${x-10*s}" y="${y-h+5*s}" width="${6*s}" height="${15*s}" fill="${shade(wall,-0.35)}"/>`;}
+function swing(x,y,s){return`<g stroke="#8a5f45" stroke-width="${3*s}" stroke-linecap="round"><line x1="${x-24*s}" y1="${y}" x2="${x-14*s}" y2="${y-46*s}"/><line x1="${x-4*s}" y1="${y}" x2="${x-14*s}" y2="${y-46*s}"/><line x1="${x+24*s}" y1="${y}" x2="${x+14*s}" y2="${y-46*s}"/><line x1="${x+4*s}" y1="${y}" x2="${x+14*s}" y2="${y-46*s}"/><line x1="${x-16*s}" y1="${y-46*s}" x2="${x+16*s}" y2="${y-46*s}"/></g><g stroke="#e9d3a6" stroke-width="${1.5*s}"><line x1="${x-7*s}" y1="${y-46*s}" x2="${x-7*s}" y2="${y-14*s}"/><line x1="${x+7*s}" y1="${y-46*s}" x2="${x+7*s}" y2="${y-14*s}"/></g>`+poly([[x-10*s,y-14*s],[x+10*s,y-14*s],[x+8*s,y-10*s],[x-8*s,y-10*s]],'#d9776f');}
+function lantern(x,y,s){return`<circle cx="${x}" cy="${y}" r="${13*s}" fill="#ffd36b" opacity=".35"/><line x1="${x}" y1="${y-16*s}" x2="${x}" y2="${y-9*s}" stroke="#6b4a3a" stroke-width="${1.5*s}"/>`+poly([[x,y-9*s],[x+7*s,y-4*s],[x+7*s,y+4*s],[x,y+9*s]],'#d9534f')+poly([[x,y-9*s],[x-7*s,y-4*s],[x-7*s,y+4*s],[x,y+9*s]],'#f07a6a');}
+function shell(x,y,s,c='#ffd0c2'){let o='';for(let k=0;k<5;k++){const a=Math.PI+k/4*Math.PI;o+=poly([[x,y],[x+Math.cos(a)*11*s,y+Math.sin(a)*11*s],[x+Math.cos(a+Math.PI/4)*11*s,y+Math.sin(a+Math.PI/4)*11*s]],shade(c,k%2?0.12:-0.1));}return o;}
+function crab(x,y,s){return`<g stroke="#d4574e" stroke-width="${1.6*s}" stroke-linecap="round"><line x1="${x-8*s}" y1="${y}" x2="${x-14*s}" y2="${y+5*s}"/><line x1="${x+8*s}" y1="${y}" x2="${x+14*s}" y2="${y+5*s}"/><line x1="${x-6*s}" y1="${y+2*s}" x2="${x-11*s}" y2="${y+8*s}"/><line x1="${x+6*s}" y1="${y+2*s}" x2="${x+11*s}" y2="${y+8*s}"/></g>`+blob(x,y,9*s,6*s,'#ef6f5f',21,6,0.3).svg+shell(x+2*s,y-3*s,0.9*s,'#f6c98a')+`<circle cx="${x-4*s}" cy="${y-6*s}" r="${1.6*s}" fill="#333"/><circle cx="${x+0*s}" cy="${y-7*s}" r="${1.6*s}" fill="#333"/>`;}
+function boat(x,y,s){return poly([[x-20*s,y],[x+20*s,y],[x+14*s,y+8*s],[x-14*s,y+8*s]],'#e8875f')+poly([[x,y-34*s],[x,y-2*s],[x+18*s,y-4*s]],'#ffffff')+poly([[x,y-30*s],[x,y-2*s],[x-14*s,y-4*s]],'#e7f3f5');}
+function car(x,y,s){return poly([[x-20*s,y],[x+20*s,y],[x+20*s,y-9*s],[x+10*s,y-10*s],[x+5*s,y-18*s],[x-12*s,y-18*s],[x-18*s,y-10*s],[x-20*s,y-9*s]],'#5fa8d3')+poly([[x-10*s,y-16*s],[x+3*s,y-16*s],[x+7*s,y-10*s],[x-15*s,y-10*s]],'#d9f1fb')+`<circle cx="${x-11*s}" cy="${y}" r="${4.5*s}" fill="#3b3a4a"/><circle cx="${x+11*s}" cy="${y}" r="${4.5*s}" fill="#3b3a4a"/>`;}
+function firework(x,y,s,c){let o=`<g stroke="${c}" stroke-width="${2*s}" stroke-linecap="round">`;for(let k=0;k<10;k++){const a=k/10*Math.PI*2;o+=`<line x1="${x+Math.cos(a)*5*s}" y1="${y+Math.sin(a)*5*s}" x2="${x+Math.cos(a)*15*s}" y2="${y+Math.sin(a)*15*s}"/>`;}return o+'</g>';}
+function swirl(x,y,s){return`<path d="M${x-20*s} ${y} q ${12*s} ${-12*s} ${24*s} 0 t ${22*s} 0" fill="none" stroke="#ffffff" stroke-width="${3*s}" stroke-linecap="round" opacity=".85"/><path d="M${x-8*s} ${y+10*s} q ${10*s} ${-9*s} ${20*s} 0" fill="none" stroke="#ffffff" stroke-width="${2.4*s}" stroke-linecap="round" opacity=".7"/>`;}
+function pandanus(x,y,s){return poly([[x-2*s,y],[x+2*s,y],[x+3*s,y-26*s],[x-1*s,y-26*s]],'#8a6a4a')+blob(x+1*s,y-34*s,16*s,10*s,'#5aa66a',41,7,0.4).svg+blob(x+1*s,y-27*s,6*s,6*s,'#f2a33a',42,6,0.4).svg;}
+function crystal(x,y,s,c){return poly([[x,y-50*s],[x-10*s,y],[x,y+4*s]],shade(c,0.15))+poly([[x,y-50*s],[x,y+4*s],[x+10*s,y]],shade(c,-0.2));}
+
+function islandDecor(i,cx,cy,s){
+  let o='';
+  switch(i){
+    case 0: o+=roundTree(cx-50*s,cy-6*s,s,'#5fbf8f',5)+roundTree(cx+48*s,cy-2*s,s*0.8,'#73c99b',6)+flower(cx-12*s,cy+16*s,s,'#ff9db5')+flower(cx+18*s,cy+20*s,s,'#ffd36b')+swirl(cx-4*s,cy-50*s,s)+swirl(cx+40*s,cy-70*s,s*0.7);break;
+    case 1: o+=crab(cx-24*s,cy+8*s,s*1.2)+shell(cx+30*s,cy+12*s,s)+shell(cx+8*s,cy+24*s,s*0.8,'#fbe0ef')+roundTree(cx+44*s,cy-10*s,s*0.9,'#66c2a5',7)+rock(cx-48*s,cy-6*s,s*0.9,'#d8c9a6',8);break;
+    case 2: o+=pine(cx-46*s,cy+2*s,s*0.85,'#3f9e63')+pine(cx-20*s,cy-12*s,s*0.7,'#4eae6f')+pandanus(cx+46*s,cy-2*s,s)+stones(cx+12*s,cy+14*s,s);break;
+    case 3: o+=swing(cx-8*s,cy+4*s,s)+flower(cx-42*s,cy+8*s,s,'#ff7fa6')+flower(cx+36*s,cy+12*s,s,'#ffffff')+flower(cx+44*s,cy-6*s,s,'#ffb3c7')+flower(cx-30*s,cy+22*s,s,'#ffd36b');break;
+    case 4: o+=house(cx+30*s,cy+2*s,s*0.9,'#f3e7d3','#c96a4a')+car(cx-24*s,cy+18*s,s*0.9)+lantern(cx-48*s,cy-22*s,s)+lantern(cx-6*s,cy-30*s,s*0.9);break;
+    case 5: o+=house(cx+10*s,cy+8*s,s*1.05,'#fff2df','#8c6bd1')+firework(cx-40*s,cy-58*s,s,'#ffd36b')+firework(cx+44*s,cy-74*s,s*0.8,'#ff8fb1')+roundTree(cx-44*s,cy+6*s,s*0.7,'#7cc89b',9);break;
+    case 6: o+=crystal(cx-20*s,cy+4*s,s,'#7f6aa8')+crystal(cx+8*s,cy-4*s,s*1.4,'#6a5794')+crystal(cx+32*s,cy+8*s,s*0.8,'#8d7bb4');break;
+  }
+  return o;
+}
+
+function mistSVG(cx,cy,s,op,seed){if(op<=0.02)return'';const R=rng(seed);let o=`<g opacity="${op.toFixed(2)}" class="mistg">`;
+  for(let k=0;k<6;k++){const x=cx+(R()-0.5)*150*s,y=cy+(R()-0.6)*70*s;o+=blob(x,y,(40+R()*30)*s,(18+R()*10)*s,'#d8d3e6',seed+k*13,7,0.25).svg;}
+  return o+'</g>';}
+
+// 角色
+function eyes(x1,x2,y,r,closed){if(closed)return`<path d="M${x1-r} ${y} q ${r} ${r*0.9} ${2*r} 0 M${x2-r} ${y} q ${r} ${r*0.9} ${2*r} 0" stroke="#3b3a4a" stroke-width="${r*0.45}" fill="none" stroke-linecap="round"/>`;
+  return`<circle cx="${x1}" cy="${y}" r="${r}" fill="#3b3a4a"/><circle cx="${x2}" cy="${y}" r="${r}" fill="#3b3a4a"/><circle cx="${x1+r*0.35}" cy="${y-r*0.35}" r="${r*0.38}" fill="#fff"/><circle cx="${x2+r*0.35}" cy="${y-r*0.35}" r="${r*0.38}" fill="#fff"/>`;}
+function owlSVG(){
+  let s='<svg viewBox="0 0 120 130" xmlns="http://www.w3.org/2000/svg">';
+  s+=poly([[22,62],[8,92],[30,96]],'#7a5a48')+poly([[98,62],[112,92],[90,96]],'#6a4c3c');
+  s+=blob(60,74,40,46,'#a77b5f',31,12,0.3).svg+blob(60,86,24,28,'#f3e2c4',32,9,0.18).svg;
+  s+=poly([[26,34],[34,14],[44,34]],'#8d654f')+poly([[94,34],[86,14],[76,34]],'#7a5a48');
+  s+=`<circle cx="44" cy="56" r="15" fill="#fff8e8"/><circle cx="76" cy="56" r="15" fill="#fff8e8"/>`+eyes(45,75,57,7.5,false);
+  s+=poly([[56,66],[64,66],[60,76]],'#f2a33a')+poly([[60,66],[64,66],[60,76]],'#d98a22');
+  s+=poly([[36,100],[60,94],[84,100],[60,106]],'#6cc49a')+poly([[60,100],[70,104],[64,118]],'#58b086');
+  s+=`<ellipse cx="34" cy="72" rx="5" ry="3" fill="#ff9db5" opacity=".6"/><ellipse cx="86" cy="72" rx="5" ry="3" fill="#ff9db5" opacity=".6"/>`;
+  s+=poly([[44,118],[52,118],[48,124]],'#f2a33a')+poly([[68,118],[76,118],[72,124]],'#f2a33a');
+  return s+'</svg>';
+}
+const SPIRIT_COL=['#8fe0c0','#ffb38f','#7fd18d','#ffaecb','#ffe08a','#c6b0ff'];
+function spiritSVG(i,sleep=false){
+  const c=SPIRIT_COL[i];let s='<svg viewBox="0 0 120 130" xmlns="http://www.w3.org/2000/svg">';
+  // 背景配件
+  if(i===1)s+=shell(84,70,2.6,'#f6c98a');
+  s+=blob(60,78,36,40,c,50+i,12,0.3).svg;
+  // 頭頂配件
+  if(i===0)s+=swirl(56,30,1.3)+poly([[46,40],[60,22],[66,42]],'#5fbf8f')+poly([[60,22],[74,38],[66,42]],'#3f9e73');
+  if(i===1)s+=`<g stroke="#e46a50" stroke-width="4" stroke-linecap="round"><line x1="28" y1="88" x2="14" y2="78"/><line x1="92" y1="88" x2="106" y2="78"/></g>`+poly([[8,70],[20,72],[14,82]],'#ef6f5f')+poly([[112,70],[100,72],[106,82]],'#ef6f5f');
+  if(i===2){s+=poly([[40,44],[50,24],[56,46]],'#3f9e63')+poly([[56,42],[64,18],[72,44]],'#4eae6f')+poly([[70,46],[80,26],[84,48]],'#3f9e63');}
+  if(i===3){for(let k=0;k<5;k++)s+=flower(36+k*12,40+(k%2)*-4,1.3,['#ff7fa6','#ffffff','#ffd36b','#ff9db5','#ffffff'][k]);}
+  if(i===4)s+=`<path d="M70 18 a 16 16 0 1 0 14 24 a 12 12 0 1 1 -14 -24z" fill="#ffd36b" stroke="#f2b94a" stroke-width="1.5"/>`;
+  if(i===5)s+=lantern(96,92,1.3);
+  s+=eyes(48,72,76,5.2,sleep);
+  s+=`<ellipse cx="40" cy="88" rx="5" ry="3" fill="#ff8fa8" opacity=".55"/><ellipse cx="80" cy="88" rx="5" ry="3" fill="#ff8fa8" opacity=".55"/>`;
+  s+=sleep?`<text x="88" y="44" font-size="14" fill="#7a7890" font-weight="900">Z</text><text x="98" y="32" font-size="10" fill="#7a7890" font-weight="900">z</text>`:`<path d="M54 90 q 6 6 12 0" stroke="#3b3a4a" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
+  return s+'</svg>';
+}
+function kingSVG(){
+  let s='<svg viewBox="0 0 120 130" xmlns="http://www.w3.org/2000/svg">';
+  s+=blob(60,80,44,42,'#8b7ab0',77,13,0.32).svg;
+  s+=poly([[34,46],[40,22],[48,44]],'#5e4f86')+poly([[50,42],[60,12],[70,42]],'#6c5c96')+poly([[72,44],[80,22],[86,46]],'#5e4f86');
+  s+=`<circle cx="60" cy="24" r="4" fill="#ffd36b"/>`;
+  s+=`<path d="M38 66 l 16 6 M82 66 l -16 6" stroke="#2e2a40" stroke-width="3.4" stroke-linecap="round"/>`+eyes(47,73,78,5,false);
+  s+=`<path d="M48 96 q 12 -8 24 0" stroke="#2e2a40" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
+  return s+'</svg>';
+}
+function portrait(who){if(who==='owl')return owlSVG();if(who==='king')return kingSVG();if(typeof who==='string'&&who.startsWith('sleep'))return spiritSVG(+who.slice(5),true);return spiritSVG(who,false);}
+</script>
+<script>// ===== 翰林三上國語守護島 主程式 =====
+const STORE='hanlin3a-guardian-island-v1';
+const STAGES=[
+  {k:'read',name:'讀音小徑',icon:'ㄅ',desc:'認讀生字的注音'},
+  {k:'shape',name:'字形石陣',icon:'字',desc:'部首、筆畫與字形'},
+  {k:'word',name:'語詞花園',icon:'花',desc:'語詞與成語'},
+  {k:'sent',name:'句子橋',icon:'句',desc:'句型與課文理解'}
+];
+const SHOP=[
+  {id:'plant',name:'窗邊盆栽',cost:20},{id:'chime',name:'微風風鈴',cost:25},{id:'shellh',name:'貝殼掛飾',cost:30},
+  {id:'rug',name:'幾何地毯',cost:35},{id:'books',name:'小書架',cost:40},{id:'lamp',name:'平安燈籠',cost:45},
+  {id:'star',name:'星星吊燈',cost:60},{id:'swing',name:'迷你秋千',cost:80}
+];
+const POS=[[180,520],[430,600],[665,505],[905,590],[1050,365],[780,230],[430,280]];
+
+let DB={profiles:{},current:null,sound:true,unlockAll:false};
+function load(){try{const s=localStorage.getItem(STORE);if(s)DB=Object.assign(DB,JSON.parse(s));}catch(e){}}
+function save(){try{localStorage.setItem(STORE,JSON.stringify(DB));}catch(e){}}
+function P(){return DB.profiles[DB.current];}
+function newProfile(name){const id='p'+Date.now();DB.profiles[id]={name,light:0,stars:{},boss:{},mist:{},items:[],seen:{},finalDone:false};DB.current=id;save();}
+
+const $=s=>document.querySelector(s);
+const app=()=>$('#app');
+function esc(t){return String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function sample(a,n){return shuffle(a).slice(0,n);}
+
+// ===== 注音（直式、聲調在右上） =====
+function zyCol(z){let tone='',s=z;const last=z.slice(-1);if('ˊˇˋ˙'.includes(last)){tone=last;s=z.slice(0,-1);}
+  const syms=[...s];const n=syms.length;
+  return`<span class="zc" style="--n:${n}">${tone==='˙'?'<i class="lt">˙</i>':''}${syms.map(c=>`<b>${c}</b>`).join('')}${tone&&tone!=='˙'?`<i class="tn">${tone}</i>`:''}</span>`;}
+function zyChar(c,z){return`<span class="zy"><span class="h">${c}</span>${zyCol(z)}</span>`;}
+
+// ===== 音效 =====
+let AC;function ac(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}}return AC;}
+function tone(a,f,t0,d,type='sine',v=0.14){const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(v,t0+0.015);g.gain.exponentialRampToValueAtTime(0.001,t0+d);o.connect(g).connect(a.destination);o.start(t0);o.stop(t0+d+0.05);}
+function sfx(n){if(!DB.sound)return;const a=ac();if(!a)return;try{if(a.state==='suspended')a.resume();}catch(e){}const t=a.currentTime;
+  if(n==='tap')tone(a,560,t,0.07,'sine',0.07);
+  if(n==='ok'){tone(a,660,t,0.14,'triangle');tone(a,990,t+0.09,0.22,'triangle');}
+  if(n==='no'){tone(a,240,t,0.18,'square',0.05);tone(a,180,t+0.12,0.25,'square',0.05);}
+  if(n==='win')[523,659,784,1047,1319].forEach((f,i)=>tone(a,f,t+i*0.1,0.32,'triangle',0.12));
+  if(n==='mist'){const len=0.5,b=a.createBuffer(1,a.sampleRate*len,a.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length);
+    const s=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();s.buffer=b;f.type='bandpass';f.frequency.setValueAtTime(400,t);f.frequency.exponentialRampToValueAtTime(3000,t+len);g.gain.value=0.18;s.connect(f).connect(g).connect(a.destination);s.start(t);tone(a,880,t+0.2,0.3,'sine',0.08);}
+}
+
+// ===== 小工具 =====
+function toast(msg){const t=document.createElement('div');t.className='toast';t.innerHTML=`<div class="tav">${owlSVG()}</div><div>${esc(msg)}</div>`;document.body.appendChild(t);setTimeout(()=>t.classList.add('out'),2300);setTimeout(()=>t.remove(),2800);}
+function burst(el,colors,n=14){const r=el.getBoundingClientRect();for(let k=0;k<n;k++){const p=document.createElement('i');p.className='shard';
+  p.style.left=(r.left+r.width/2)+'px';p.style.top=(r.top+r.height/2)+'px';p.style.background=colors[k%colors.length];
+  const a=Math.random()*Math.PI*2,d=60+Math.random()*120;p.style.setProperty('--dx',Math.cos(a)*d+'px');p.style.setProperty('--dy',(Math.sin(a)*d-60)+'px');p.style.setProperty('--rot',(Math.random()*540)+'deg');
+  document.body.appendChild(p);setTimeout(()=>p.remove(),1000);}}
+function unlocked(i){const p=P();if(DB.unlockAll)return true;if(i===6)return [0,1,2,3,4,5].every(j=>p.boss[j]);return i===0||!!p.boss[i-1];}
+function stageDone(i){const p=P();return STAGES.filter(s=>p.stars[i+'-'+s.k]).length;}
+function mistOf(i){const p=P();return (p.mist[i]||[]);}
+function addMist(i,desc){const p=P();p.mist[i]=p.mist[i]||[];if(!p.mist[i].includes(desc))p.mist[i].push(desc);save();}
+function delMist(i,desc){const p=P();p.mist[i]=(p.mist[i]||[]).filter(d=>d!==desc);save();}
+
+// ===== 題目產生 =====
+function charsOf(li){return L[li].chars.map(c=>({c:c[0],z:c[1],r:c[2],s:c[3],w:c[4],noRead:!!c[5]}));}
+const ALL_R=[...new Set(L.flatMap(l=>l.chars.map(c=>c[2])))];
+function toneVariants(z){const b=z.replace(/[ˊˇˋ˙]/g,'');return[b,b+'ˊ',b+'ˇ',b+'ˋ'];}
+function hlWord(w,c){return[...w].map(ch=>ch===c?`<span class="hl">${ch}</span>`:ch).join('');}
+function blankWord(w,c,z){return[...w].map(ch=>ch===c?`<span class="blank"><span class="bx">？</span>${zyCol(z)}</span>`:`<span class="wch">${ch}</span>`).join('');}
+
+function build(desc){
+  const [lis,t,k]=desc.split('|');
+  if(lis==='F'){const h=FINAL[+k];return mkHand(h,desc);}
+  const li=+lis,l=L[li];
+  if(t==='h'){const m=k.match(/^([a-z]+)(\d+)$/);return mkHand(l.hand[m[1]][+m[2]],desc);}
+  const cs=charsOf(li);
+  if(t==='rz'){const it=cs.find(x=>x.c===k);const opts=new Set([it.z]);
+    shuffle(toneVariants(it.z)).forEach(z=>{if(opts.size<3)opts.add(z);});
+    shuffle(cs.map(x=>x.z)).forEach(z=>{if(opts.size<4)opts.add(z);});
+    return{desc,prompt:`<div class="qlabel">念念看，<b>畫底線的字</b>怎麼念？</div><div class="qword big">${hlWord(it.w,it.c)}</div>`,
+      opts:shuffle([...opts]).map(z=>({v:z,h:zyCol(z),cls:'zopt'})),ans:it.z,ex:`「${it.w}」的「${it.c}」念 ${it.z}。`};}
+  if(t==='rc'){const it=cs.find(x=>x.c===k);const pool=shuffle(cs.filter(x=>x.z!==it.z&&!it.w.includes(x.c))).slice(0,3).map(x=>x.c);
+    return{desc,prompt:`<div class="qlabel">看注音，選出正確的字</div><div class="qword big">${blankWord(it.w,it.c,it.z)}</div>`,
+      opts:shuffle([it.c,...pool]).map(c=>({v:c,h:c,cls:'copt'})),ans:it.c,ex:`「${it.w}」的「${it.c}」，注音是 ${it.z}。`};}
+  if(t==='rad'){const it=cs.find(x=>x.c===k);const pool=sample(ALL_R.filter(r=>r!==it.r),3);
+    return{desc,prompt:`<div class="qlabel">「${it.c}」的部首是什麼？</div><div class="qchar">${zyChar(it.c,it.z)}</div>`,
+      opts:shuffle([it.r,...pool]).map(r=>({v:r,h:r,cls:'copt'})),ans:it.r,ex:`「${it.c}」的部首是「${it.r}」。`};}
+  if(t==='stk'){const it=cs.find(x=>x.c===k);const c=new Set([it.s]);shuffle([-3,-2,-1,1,2,3]).forEach(d=>{if(c.size<4&&it.s+d>0)c.add(it.s+d);});
+    return{desc,prompt:`<div class="qlabel">「${it.c}」一共有幾畫？</div><div class="qchar">${zyChar(it.c,it.z)}</div>`,
+      opts:shuffle([...c]).map(n=>({v:n,h:n+' 畫',cls:'topt'})),ans:it.s,ex:`「${it.c}」總共 ${it.s} 畫。`};}
+  if(t==='im'||t==='if'){const it=l.idioms.find(x=>x[0]===k);let others=l.idioms.filter(x=>x[0]!==k).map(x=>x[0]);
+    if(others.length<3)others=others.concat(L.flatMap(x=>x.idioms.map(y=>y[0])).filter(y=>y!==k&&!others.includes(y)));
+    const opts=shuffle([k,...sample(others,3)]).map(x=>({v:x,h:x,cls:'topt'}));
+    const prompt=t==='im'?`<div class="qlabel">哪一個成語的意思是：</div><div class="qtext">「${esc(it[1])}」</div>`
+      :`<div class="qlabel">選出最適合填入空格的成語</div><div class="qtext">${esc(it[2]).replace('＿＿＿＿','<span class="gap">？？？？</span>')}</div>`;
+    return{desc,prompt,opts,ans:k,ex:`${k}：${it[1]}`};}
+}
+function mkHand(h,desc){const lg=h.o.some(x=>x.length>8),one=h.o.every(x=>x.length===1);const opts=shuffle(h.o).map(x=>({v:x,h:h.zo?zyCol(x):esc(x),cls:h.zo?'zopt':one?'copt':(lg?'lopt':'topt')}));
+  return{desc,prompt:`<div class="qtext">${esc(h.q).replace(/〔(.+?)〕/g,'<span class="hl">$1</span>')}</div>`,opts,ans:h.o[0],ex:h.ex};}
+
+function poolFor(li,stage){
+  const l=L[li],cs=charsOf(li),H=k=>(l.hand[k]||[]).map((_,j)=>`${li}|h|${k}${j}`);
+  if(stage==='read'){const rd=cs.filter(c=>!c.noRead);const hr=H('read');
+    const a=sample(rd,6);let list=a.slice(0,3).map(c=>`${li}|rz|${c.c}`).concat(a.slice(3,6).map(c=>`${li}|rc|${c.c}`));
+    if(hr.length){const n=Math.min(3,hr.length);list=sample(list,6-n).concat(sample(hr,n));}return shuffle(list);}
+  if(stage==='shape'){const a=sample(cs,5);const hs=H('shape');
+    let list=a.slice(0,3).map(c=>`${li}|rad|${c.c}`).concat(a.slice(3,5).map(c=>`${li}|stk|${c.c}`));
+    if(hs.length)list=sample(list,6-Math.min(3,hs.length)).concat(sample(hs,Math.min(3,hs.length)));else list.push(`${li}|rad|${sample(cs,1)[0].c}`);
+    return shuffle(list);}
+  if(stage==='word'){const ids=l.idioms.map(x=>x[0]);const a=sample(ids,4);
+    return shuffle([`${li}|im|${a[0]}`,`${li}|if|${a[1]}`].concat(sample(H('word'),4)));}
+  if(stage==='sent')return sample(H('sent'),6);
+  if(stage==='boss'){return shuffle(STAGES.flatMap(s=>sample(poolFor(li,s.k),2)));}
+}
+
+// ===== 畫面：標題 =====
+function screenTitle(){
+  const ps=Object.entries(DB.profiles).sort((a,b)=>a[0]<b[0]?-1:1);
+  app().innerHTML=`<div class="title-screen">
+    <div class="title-bg">${titleArt()}</div>
+    <div class="title-card facet">
+      <div class="title-owl">${owlSVG()}</div>
+      <h1><span class="t1">翰林三上國語</span><span class="t2">守護島</span></h1>
+      <p class="sub">第七課～第十二課 闖關複習</p>
+      <div class="plist">${ps.map(([id,p])=>`<button class="pbtn" data-id="${id}"><span class="pname">${esc(p.name)}</span><span class="plight">✦ ${p.light}</span></button>`).join('')}</div>
+      <div class="newp"><input id="pname" maxlength="10" placeholder="輸入守護者名字（例如：12號 小明）"><button class="btn primary" id="pgo">新的守護者</button></div>
+      <button class="linkbtn" id="pimp">換了平板？用進度碼接回進度</button>
+    </div></div>`;
+  app().querySelectorAll('.pbtn').forEach(b=>b.onclick=()=>{sfx('tap');DB.current=b.dataset.id;save();screenMap();});
+  $('#pimp').onclick=()=>{sfx('tap');importBox();};
+  $('#pgo').onclick=()=>{const n=$('#pname').value.trim();if(!n){$('#pname').focus();toast('先輸入你的名字喔！');return;}sfx('tap');newProfile(n);
+    dialog(STORY.prologue,()=>{P().seen.prologue=true;save();screenMap();});};
+}
+function titleArt(){let s='<svg viewBox="0 0 1200 720" preserveAspectRatio="xMidYMid slice">'+seaBG();
+  [[150,560,0],[1040,600,3],[1080,200,5],[170,190,2]].forEach(([x,y,i])=>{s+=islandSVG(x,y,110,55,L[i].color,L[i].cliff,i*31+5)+islandDecor(i,x,y-8,1);});return s+'</svg>';}
+function seaBG(){const R=rng(99);let s=`<defs><linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cdeef5"/><stop offset="1" stop-color="#8fd0e6"/></linearGradient>
+  <filter id="gray"><feColorMatrix type="saturate" values="0.12"/></filter></defs><rect x="-1200" y="-900" width="3600" height="2520" fill="url(#sea)"/>`;
+  for(let k=0;k<70;k++){const x=R()*1200,y=R()*720,r=20+R()*50;s+=`<polygon points="${x},${y} ${x+r},${y+r*0.3} ${x+r*0.3},${y+r*0.8}" fill="#ffffff" opacity="${(0.05+R()*0.1).toFixed(2)}"/>`;}
+  return s;}
+
+// ===== 畫面：地圖 =====
+function screenMap(){
+  const p=P();if(!p){screenTitle();return;}
+  let svg='<svg class="mapsvg" viewBox="0 0 1200 720" preserveAspectRatio="xMidYMid meet">'+seaBG();
+  svg+=`<polyline points="${POS.slice(0,6).map(q=>q.join(',')).join(' ')}" fill="none" stroke="#ffffff" stroke-width="6" stroke-dasharray="2 16" stroke-linecap="round" opacity=".8"/>`;
+  svg+=`<line x1="${POS[5][0]}" y1="${POS[5][1]}" x2="${POS[6][0]}" y2="${POS[6][1]}" stroke="#ffffff" stroke-width="6" stroke-dasharray="2 16" stroke-linecap="round" opacity=".5"/>`;
+  for(let i=0;i<7;i++){const[x,y]=POS[i];const fin=i===6;const un=unlocked(i);
+    const col=fin?'#b6a9d1':L[i].color,cl=fin?'#7d6b8f':L[i].cliff;
+    const done=fin?(p.finalDone?5:0):stageDone(i)+(p.boss[i]?1:0);
+    const op=!un?0.92:(fin?(p.finalDone?0:0.8):(1-done/5)*0.8);
+    svg+=`<g class="isl ${un?'':'locked'}" data-i="${i}"><g ${un?'':'filter="url(#gray)"'}>${islandSVG(x,y,fin?120:100,fin?58:50,col,cl,i*31+5)}${islandDecor(i,x,y-6,fin?1.1:0.95)}</g>${mistSVG(x,y-10,1,op,i*17+3)}`;
+    const label=fin?'迷霧島':`第${L[i].n}課 ${L[i].island}`;
+    svg+=`<g class="lbl"><rect x="${x-78}" y="${y+56}" width="156" height="34" rx="17" fill="${un?'#ffffff':'#e6e3ee'}" opacity=".95"/><text x="${x}" y="${y+79}" text-anchor="middle">${label}</text></g>`;
+    if(!fin&&un){const m=mistOf(i).length;svg+=`<g transform="translate(${x+70},${y-40})">${[0,1,2,3].map(k=>`<polygon points="${k*13},0 ${k*13+11},0 ${k*13+5.5},-10" fill="${p.stars[i+'-'+STAGES[k].k]?'#ffcf4a':'#ffffff'}" stroke="#d9a400" stroke-width="${p.stars[i+'-'+STAGES[k].k]?1:0}" opacity="${p.stars[i+'-'+STAGES[k].k]?1:0.7}"/>`).join('')}${p.boss[i]?`<circle cx="62" cy="-5" r="7" fill="${SPIRIT_COL[i]}" stroke="#fff" stroke-width="2"/>`:''}</g>`;
+      if(m)svg+=`<g transform="translate(${x-92},${y-46})"><circle r="16" fill="#8b7ab0"/><text y="6" text-anchor="middle" fill="#fff" font-size="16" font-weight="900">${m}</text></g>`;}
+    if(!un)svg+=`<g transform="translate(${x},${y-20})"><rect x="-14" y="-6" width="28" height="22" rx="4" fill="#7a7890"/><path d="M-8 -6 v-6 a8 8 0 0 1 16 0 v6" fill="none" stroke="#7a7890" stroke-width="4"/></g>`;
+    svg+='</g>';}
+  svg+='</svg>';
+  app().innerHTML=`<div class="map-screen">${svg}
+    <div class="hud">
+      <div class="hud-l facet"><div class="hud-owl">${owlSVG()}</div><div><div class="hud-t">翰林三上國語守護島</div><div class="hud-n">守護者：${esc(p.name)}</div></div></div>
+      <div class="hud-r"><div class="light facet">✦ <b>${p.light}</b> 守護光</div><button class="btn" id="hut">🏠 守護者小屋</button><button class="btn icon" id="set">⚙</button></div>
+    </div></div>`;
+  app().querySelectorAll('.isl').forEach(g=>g.onclick=()=>{const i=+g.dataset.i;
+    if(!unlocked(i)){sfx('no');toast(i===6?'要先喚醒六座島的精靈，迷霧島才會出現喔！':'先喚醒前一座島的精靈，才能前往這裡喔！');return;}
+    sfx('tap');if(i===6)screenFinal();else screenIsland(i);});
+  $('#hut').onclick=()=>{sfx('tap');screenHut();};
+  $('#set').onclick=()=>{sfx('tap');settings();};
+}
+
+// ===== 畫面：島嶼 =====
+function screenIsland(i){
+  const p=P(),l=L[i];
+  const go=()=>{
+    const allDone=STAGES.every(s=>p.stars[i+'-'+s.k]);const bossOpen=allDone||DB.unlockAll;const m=mistOf(i).length;
+    app().innerHTML=`<div class="isl-screen" style="--ic:${l.color}">
+      <div class="isl-top"><button class="btn" id="back">← 地圖</button><div class="isl-title"><span class="ln">第${l.n}課</span>${l.title}<span class="gn">${l.genre}</span></div><div class="light facet">✦ <b>${p.light}</b></div></div>
+      <div class="isl-body">
+        <div class="isl-art facet"><svg viewBox="0 0 420 300">${islandSVG(210,190,170,80,l.color,l.cliff,i*31+5)}${islandDecor(i,210,180,1.5)}${mistSVG(210,170,1.7,p.boss[i]?0:(1-stageDone(i)/5)*0.7,i*17+3)}</svg>
+          <div class="isl-spirit ${p.boss[i]?'awake':''}">${spiritSVG(i,!p.boss[i])}</div>
+          <div class="isl-cap">${l.island}・${l.spiritTitle}「${l.spirit}」${p.boss[i]?'已喚醒':'沉睡中'}</div></div>
+        <div class="stages">
+          ${STAGES.map((s,k)=>{const st=p.stars[i+'-'+s.k]||0;return`<button class="stage facet" data-s="${s.k}"><span class="sico">${s.icon}</span><span class="sname">${s.name}<small>${s.desc}</small></span><span class="sstar">${[1,2,3].map(n=>`<i class="${n<=st?'on':''}">★</i>`).join('')}</span></button>`;}).join('')}
+          <button class="stage boss facet ${bossOpen?'':'dis'}" id="boss"><span class="sico">${spiritSVG(i,!p.boss[i])}</span><span class="sname">喚醒${l.spirit}<small>${bossOpen?'島主挑戰：綜合題，3 顆愛心':'完成上面四關後開啟'}</small></span><span class="sstar">${p.boss[i]?'<i class="on">✓</i>':''}</span></button>
+          <button class="stage mist facet ${m?'':'dis'}" id="mist"><span class="sico">☁</span><span class="sname">驅散迷霧<small>${m?`還有 ${m} 團迷霧（答錯的題目）`:'目前沒有迷霧，真棒！'}</small></span></button>
+        </div></div></div>`;
+    $('#back').onclick=()=>{sfx('tap');screenMap();};
+    app().querySelectorAll('.stage[data-s]').forEach(b=>b.onclick=()=>{sfx('tap');startQuiz({mode:'stage',i,stage:b.dataset.s});});
+    $('#boss').onclick=()=>{if(!bossOpen){sfx('no');toast('先完成讀音、字形、語詞、句子四個關卡喔！');return;}sfx('tap');startQuiz({mode:'boss',i,stage:'boss'});};
+    $('#mist').onclick=()=>{if(!m){toast('這座島沒有迷霧了！');return;}sfx('tap');startQuiz({mode:'mist',i});};
+  };
+  if(!p.seen['i'+i]){p.seen['i'+i]=true;save();go();dialog(STORY.intro[i]);}else go();
+}
+
+// ===== 畫面：迷霧島 =====
+function screenFinal(){
+  const p=P();
+  const go=()=>{const m=mistOf('F').length;
+    app().innerHTML=`<div class="isl-screen final" style="--ic:#b6a9d1">
+      <div class="isl-top"><button class="btn" id="back">← 地圖</button><div class="isl-title"><span class="ln">統整活動</span>迷霧島<span class="gn">擴寫・標點</span></div><div class="light facet">✦ <b>${p.light}</b></div></div>
+      <div class="isl-body">
+        <div class="isl-art facet"><svg viewBox="0 0 420 300">${islandSVG(210,190,170,80,'#b6a9d1','#7d6b8f',191)}${islandDecor(6,210,180,1.6)}${mistSVG(210,170,1.7,p.finalDone?0:0.7,105)}</svg>
+          <div class="isl-spirit ${p.finalDone?'':'awake'}">${p.finalDone?owlSVG():kingSVG()}</div>
+          <div class="isl-cap">${p.finalDone?'迷霧王已被打散！':'迷霧的源頭：迷霧王'}</div></div>
+        <div class="stages">
+          <button class="stage boss facet" id="fb"><span class="sico">${kingSVG()}</span><span class="sname">挑戰迷霧王<small>擴寫句子、標點符號，再加上六座島的複習題，5 顆愛心</small></span><span class="sstar">${p.finalDone?'<i class="on">✓</i>':''}</span></button>
+          <button class="stage mist facet ${m?'':'dis'}" id="mist"><span class="sico">☁</span><span class="sname">驅散迷霧<small>${m?`還有 ${m} 團迷霧`:'目前沒有迷霧'}</small></span></button>
+        </div></div></div>`;
+    $('#back').onclick=()=>{sfx('tap');screenMap();};
+    $('#fb').onclick=()=>{sfx('tap');startQuiz({mode:'final',i:'F'});};
+    $('#mist').onclick=()=>{if(!m)return;sfx('tap');startQuiz({mode:'mist',i:'F'});};
+  };
+  if(!p.seen.final){p.seen.final=true;save();go();dialog(STORY.finalIntro);}else go();
+}
+
+// ===== 答題 =====
+let Q=null;
+function startQuiz(o){
+  let list;
+  if(o.mode==='stage')list=poolFor(o.i,o.stage);
+  else if(o.mode==='boss')list=poolFor(o.i,'boss');
+  else if(o.mode==='mist')list=mistOf(o.i).slice(0,10);
+  else if(o.mode==='final'){const f=sample(FINAL.map((_,k)=>`F|h|${k}`),8);const mix=[0,1,2,3,4,5].map(li=>sample(poolFor(li,sample(['read','shape','word','sent'],1)[0]),1)[0]);list=f.concat(sample(mix,4));}
+  Q=Object.assign({list,idx:0,wrong:0,gain:0,hearts:o.mode==='boss'?3:(o.mode==='final'?5:0)},o);
+  showQ();
+}
+function qTitle(){if(Q.mode==='stage')return STAGES.find(s=>s.k===Q.stage).name;if(Q.mode==='boss')return'喚醒'+L[Q.i].spirit;if(Q.mode==='mist')return'驅散迷霧';return'挑戰迷霧王';}
+function showQ(){
+  const q=build(Q.list[Q.idx]);Q.cur=q;Q.done=false;
+  const isBoss=Q.mode==='boss'||Q.mode==='final';
+  app().innerHTML=`<div class="quiz m-${Q.mode}" style="--ic:${Q.i==='F'?'#b6a9d1':L[Q.i].color}">
+    <div class="qtop"><button class="btn icon" id="quit">✕</button><div class="qt">${qTitle()}</div>
+      <div class="dots">${Q.list.map((_,k)=>`<i class="${k<Q.idx?'d':k===Q.idx?'c':''}"></i>`).join('')}</div>
+      <div class="hearts">${Q.hearts?Array.from({length:isBoss?(Q.mode==='boss'?3:5):0},(_,k)=>`<span class="${k<Q.hearts?'':'lost'}">♥</span>`).join(''):''}</div></div>
+    <div class="qmain">
+      <div class="qside">${Q.mode==='final'?kingSVG():Q.mode==='boss'?spiritSVG(Q.i,true):owlSVG()}</div>
+      <div class="qcard facet">${q.prompt}</div>
+    </div>
+    <div class="opts ${q.opts.some(o=>o.cls==='lopt')?'long':''}">${q.opts.map((o,k)=>`<button class="opt ${o.cls}" data-k="${k}">${o.h}</button>`).join('')}</div>
+    <div class="fb" id="fb"></div></div>`;
+  $('#quit').onclick=()=>{sfx('tap');confirmBox('要離開這一關嗎？這一關的進度不會保存。',()=>back());};
+  app().querySelectorAll('.opt').forEach(b=>b.onclick=()=>answer(+b.dataset.k,b));
+}
+function back(){if(Q.i==='F')screenFinal();else screenIsland(Q.i);}
+function answer(k,btn){
+  if(Q.done)return;Q.done=true;const q=Q.cur;const ok=q.opts[k].v===q.ans;
+  const btns=app().querySelectorAll('.opt');btns.forEach((b,j)=>{b.disabled=true;if(q.opts[j].v===q.ans)b.classList.add('right');});
+  const isl=Q.i;
+  if(ok){sfx(Q.mode==='mist'?'mist':'ok');burst(btn,Q.mode==='mist'?['#d8d3e6','#ffffff','#b6a9d1']:['#ffcf4a','#8fd6b4','#ff9db5','#9ad0f5']);
+    const g=Q.mode==='mist'?3:2;Q.gain+=g;P().light+=g;
+    if(Q.mode==='mist')delMist(isl,q.desc);}
+  else{sfx('no');btn.classList.add('wrong');Q.wrong++;addMist(Q.mode==='final'&&q.desc[0]!=='F'?q.desc.split('|')[0]:isl,q.desc);
+    if(Q.hearts){Q.hearts--;const hs=app().querySelectorAll('.hearts span');if(hs[Q.hearts])hs[Q.hearts].classList.add('lost','pop');}}
+  save();
+  const last=Q.idx>=Q.list.length-1,dead=(Q.mode==='boss'||Q.mode==='final')&&Q.hearts<=0;
+  const fb=$('#fb');fb.className='fb show '+(ok?'ok':'no');
+  fb.innerHTML=`<div class="fbmark">${ok?'答對了！':'再想想看～'}</div><div class="fbex">${esc(q.ex)}${!ok&&Q.mode!=='mist'?'<span class="mnote">這題變成了迷霧，記得回來驅散它！</span>':''}</div><button class="btn primary" id="next">${dead?'看結果':last?'完成':'下一題 →'}</button>`;
+  $('#next').onclick=()=>{sfx('tap');if(dead||last)finish(dead);else{Q.idx++;showQ();}};
+}
+function finish(dead){
+  const p=P();let title,body,stars=0,extra=0,after=null;
+  const n=Q.list.length;
+  if(dead){title='迷霧太濃了……';body='愛心用完了，休息一下再挑戰一次吧！答錯的題目已經變成迷霧，可以先去「驅散迷霧」練習。';}
+  else if(Q.mode==='stage'){stars=Q.wrong===0?3:Q.wrong<=2?2:1;extra=5+stars*2;const key=Q.i+'-'+Q.stage;p.stars[key]=Math.max(p.stars[key]||0,stars);
+    title=['','完成關卡！','做得很好！','太厲害了！'][stars];body=`答對 ${n-Q.wrong} / ${n} 題`;}
+  else if(Q.mode==='boss'){const first=!p.boss[Q.i];p.boss[Q.i]=true;extra=first?20:8;title=`喚醒了${L[Q.i].spirit}！`;body=`答對 ${n-Q.wrong} / ${n} 題`;if(first)after=STORY.clear[Q.i];}
+  else if(Q.mode==='mist'){const left=mistOf(Q.i).length;title='迷霧散開了！';body=`驅散了 ${n-Q.wrong} 團迷霧`+(left?`，還剩 ${left} 團。`:'，這裡的迷霧全部消失了！');}
+  else{const first=!p.finalDone;p.finalDone=true;extra=first?50:15;title='打敗迷霧王！';body=`答對 ${n-Q.wrong} / ${n} 題`;if(first)after=STORY.finalClear;}
+  p.light+=extra;save();
+  if(!dead)sfx('win');
+  const ov=document.createElement('div');ov.className='overlay';
+  ov.innerHTML=`<div class="result facet">
+    <div class="rart">${Q.mode==='boss'&&!dead?spiritSVG(Q.i):Q.mode==='final'&&!dead?owlSVG():dead?kingSVG():owlSVG()}</div>
+    <h2>${title}</h2>${stars?`<div class="rstars">${[1,2,3].map(k=>`<i class="${k<=stars?'on':''}" style="animation-delay:${k*0.15}s">★</i>`).join('')}</div>`:''}
+    <p>${body}</p><div class="rgain">✦ 獲得守護光 ${Q.gain+extra}</div>
+    <div class="rbtns"><button class="btn" id="again">再玩一次</button><button class="btn primary" id="ok">回到${Q.i==='F'?'迷霧島':'島上'}</button></div></div>`;
+  document.body.appendChild(ov);
+  if(!dead)setTimeout(()=>burst(ov.querySelector('h2'),['#ffcf4a','#8fd6b4','#ff9db5','#9ad0f5','#c6b4f2'],26),150);
+  const mode=Q.mode,i=Q.i,stage=Q.stage;
+  ov.querySelector('#ok').onclick=()=>{sfx('tap');ov.remove();back();if(after)dialog(after);};
+  ov.querySelector('#again').onclick=()=>{sfx('tap');ov.remove();if(mode==='mist'&&!mistOf(i).length){back();return;}startQuiz({mode,i,stage});if(after)dialog(after);};
+}
+
+// ===== 對話 =====
+function dialog(lines,done){
+  const p=P();let k=0;const ov=document.createElement('div');ov.className='overlay dlg';document.body.appendChild(ov);
+  const name=w=>w==='owl'?'貓頭鷹文文':w==='king'?'迷霧王':(typeof w==='string'&&w.startsWith('sleep'))?L[+w.slice(5)].spiritTitle+L[+w.slice(5)].spirit:L[w].spiritTitle+L[w].spirit;
+  const show=()=>{const[w,t]=lines[k];const txt=t.replace('{name}',p?p.name:'');
+    ov.innerHTML=`<div class="dbox facet"><div class="dpor">${portrait(w)}</div><div class="dtxt"><div class="dname">${name(w)}</div><div class="dline"></div><div class="dnext">${k<lines.length-1?'點一下繼續 ▶':'點一下開始 ▶'}</div></div></div>`;
+    ov.querySelector('.dline').textContent=txt;};
+  ov.onclick=()=>{sfx('tap');k++;if(k>=lines.length){ov.remove();if(done)done();}else show();};
+  show();
+}
+function confirmBox(msg,yes){const ov=document.createElement('div');ov.className='overlay';
+  ov.innerHTML=`<div class="result facet small"><div class="rart">${owlSVG()}</div><p>${esc(msg)}</p><div class="rbtns"><button class="btn" id="n">取消</button><button class="btn primary" id="y">確定</button></div></div>`;
+  document.body.appendChild(ov);ov.querySelector('#n').onclick=()=>{sfx('tap');ov.remove();};ov.querySelector('#y').onclick=()=>{sfx('tap');ov.remove();yes();};}
+
+// ===== 守護者小屋 =====
+function roomSVG(items){const has=id=>items.includes(id);
+  let s='<svg viewBox="0 0 600 400">';
+  s+=poly([[0,0],[600,0],[600,260],[0,260]],'#fbefdc')+poly([[0,0],[90,40],[90,280],[0,330]],'#efdcc2')+poly([[510,40],[600,0],[600,330],[510,280]],'#f3e3cc')+poly([[90,40],[510,40],[510,280],[90,280]],'#fff6e9');
+  const R=rng(5);for(let x=0;x<6;x++)for(let y=0;y<2;y++){const x0=x*100,y0=280+y*60;s+=poly([[x0,y0],[x0+100,y0],[x0+100,y0+60]],shade('#d9b48a',(R()-0.5)*0.15))+poly([[x0,y0],[x0+100,y0+60],[x0,y0+60]],shade('#d9b48a',(R()-0.5)*0.15-0.05));}
+  s+=poly([[200,80],[330,80],[330,180],[200,180]],'#9ad7ee')+`<rect x="200" y="80" width="130" height="100" fill="none" stroke="#a77b5f" stroke-width="8"/><line x1="265" y1="80" x2="265" y2="180" stroke="#a77b5f" stroke-width="5"/>`;
+  s+=islandSVG(240,150,30,12,'#8fd6b4','#b98a63',4);
+  s+=poly([[400,110],[470,110],[470,280],[400,280]],'#c49470')+`<circle cx="458" cy="200" r="5" fill="#f2c14a"/>`;
+  if(has('rug'))s+=blob(300,335,120,30,'#c6b4f2',8,10,0.3).svg;
+  if(has('plant'))s+=poly([[190,180],[214,180],[210,200],[194,200]],'#e8875f')+roundTree(202,182,0.8,'#5fbf8f',12);
+  if(has('chime'))s+=`<line x1="355" y1="40" x2="355" y2="80" stroke="#a77b5f" stroke-width="2"/>`+poly([[343,80],[367,80],[355,92]],'#9ad0f5')+`<g stroke="#9ad0f5" stroke-width="3"><line x1="347" y1="92" x2="347" y2="112"/><line x1="355" y1="94" x2="355" y2="118"/><line x1="363" y1="92" x2="363" y2="110"/></g>`;
+  if(has('shellh'))s+=`<path d="M110 70 q 40 30 80 0" fill="none" stroke="#a77b5f" stroke-width="2"/>`+shell(125,84,1,'#ffd0c2')+shell(150,90,1,'#fbe0ef')+shell(175,84,1,'#f6c98a');
+  if(has('books'))s+=poly([[110,150],[175,150],[175,280],[110,280]],'#a77b5f')+[0,1,2].map(r=>[0,1,2,3,4].map(c=>`<rect x="${116+c*11}" y="${160+r*40}" width="9" height="30" fill="${['#ef6f5f','#5fa8d3','#ffcf4a','#8fd6b4','#c6b4f2'][(c+r)%5]}"/>`).join('')).join('');
+  if(has('lamp'))s+=lantern(520,120,2)+`<line x1="520" y1="40" x2="520" y2="88" stroke="#6b4a3a" stroke-width="2"/>`;
+  if(has('star'))s+=`<line x1="300" y1="0" x2="300" y2="30" stroke="#a77b5f" stroke-width="2"/><polygon points="300,26 308,44 328,46 312,58 318,78 300,66 282,78 288,58 272,46 292,44" fill="#ffcf4a" stroke="#f2b94a"/><circle cx="300" cy="54" r="40" fill="#ffe58a" opacity=".25"/>`;
+  if(has('swing'))s+=swing(548,330,1.4);
+  s+=`<g transform="translate(250,250) scale(.85)">${owlSVG().replace('<svg viewBox="0 0 120 130" xmlns="http://www.w3.org/2000/svg">','').replace('</svg>','')}</g>`;
+  return s+'</svg>';}
+function screenHut(){
+  const p=P();
+  app().innerHTML=`<div class="hut-screen">
+    <div class="isl-top"><button class="btn" id="back">← 地圖</button><div class="isl-title">守護者小屋</div><div class="light facet">✦ <b>${p.light}</b></div></div>
+    <div class="hut-body"><div class="room facet">${roomSVG(p.items)}
+        <div class="badges"><div class="bt">精靈徽章</div>${L.map((l,i)=>`<div class="badge ${p.boss[i]?'on':''}" title="${l.spirit}">${spiritSVG(i,!p.boss[i])}</div>`).join('')}<div class="badge ${p.finalDone?'on':''}">${owlSVG()}</div></div></div>
+      <div class="shop facet"><h3>用守護光布置小屋</h3>${SHOP.map(it=>{const own=p.items.includes(it.id);return`<div class="sitem ${own?'own':''}"><span>${it.name}</span>${own?'<em>已擁有</em>':`<button class="btn sm ${p.light>=it.cost?'primary':''}" data-id="${it.id}">✦ ${it.cost}</button>`}</div>`;}).join('')}
+        <p class="tip">答對題目、完成關卡、驅散迷霧，都能得到守護光！</p></div></div></div>`;
+  $('#back').onclick=()=>{sfx('tap');screenMap();};
+  app().querySelectorAll('.sitem button').forEach(b=>b.onclick=()=>{const it=SHOP.find(x=>x.id===b.dataset.id);
+    if(p.light<it.cost){sfx('no');toast(`還差 ${it.cost-p.light} 點守護光喔！`);return;}
+    p.light-=it.cost;p.items.push(it.id);save();sfx('win');screenHut();});
+}
+
+// ===== 設定 =====
+function settings(){
+  const ov=document.createElement('div');ov.className='overlay';let taps=0;
+  const draw=()=>{ov.innerHTML=`<div class="result facet small set">
+    <div class="rart" id="sowl">${owlSVG()}</div><h2>設定</h2>
+    <div class="srow"><span>音效</span><button class="btn sm ${DB.sound?'primary':''}" id="snd">${DB.sound?'開':'關'}</button></div>
+    <div class="srow"><span>進度碼（換平板時使用）</span><button class="btn sm" id="code">產生</button></div>
+    <div class="srow"><span>換守護者</span><button class="btn sm" id="sw">回到標題</button></div>
+    <div class="srow"><span>重新開始（清除 ${esc(P().name)} 的紀錄）</span><button class="btn sm danger" id="rs">清除</button></div>
+    ${taps>=5?`<div class="srow teacher"><span>老師工具：全部島嶼解鎖</span><button class="btn sm ${DB.unlockAll?'primary':''}" id="ua">${DB.unlockAll?'已解鎖':'解鎖'}</button></div>`:''}
+    <p class="tip">進度存在這台裝置的瀏覽器裡。</p>
+    <div class="rbtns"><button class="btn primary" id="cl">關閉</button></div></div>`;
+    ov.querySelector('#sowl').onclick=()=>{taps++;if(taps===5){sfx('win');draw();}};
+    ov.querySelector('#snd').onclick=()=>{DB.sound=!DB.sound;save();sfx('tap');draw();};
+    ov.querySelector('#code').onclick=()=>{sfx('tap');ov.remove();exportBox();};
+    ov.querySelector('#sw').onclick=()=>{ov.remove();screenTitle();};
+    ov.querySelector('#rs').onclick=()=>{ov.remove();confirmBox(`確定要清除「${P().name}」的所有紀錄嗎？`,()=>{delete DB.profiles[DB.current];DB.current=null;save();screenTitle();});};
+    const ua=ov.querySelector('#ua');if(ua)ua.onclick=()=>{DB.unlockAll=!DB.unlockAll;save();draw();};
+    ov.querySelector('#cl').onclick=()=>{ov.remove();screenMap();};};
+  draw();document.body.appendChild(ov);
+}
+
+// ===== 進度碼 =====
+function chk(t){let h=0;for(let k=0;k<t.length;k++)h=(h*31+t.charCodeAt(k))%1296;return h.toString(36).padStart(2,'0').toUpperCase();}
+function packProfile(p){
+  return{v:1,n:p.name,l:p.light,
+    s:[0,1,2,3,4,5].map(i=>STAGES.map(st=>p.stars[i+'-'+st.k]||0).join('')).join(''),
+    b:[0,1,2,3,4,5].map(i=>p.boss[i]?1:0).join('')+(p.finalDone?1:0),
+    i:p.items.map(id=>SHOP.findIndex(x=>x.id===id)).filter(x=>x>=0).join(''),
+    m:p.mist,e:Object.keys(p.seen).join(',')};}
+function unpackProfile(o){
+  if(!o||o.v!==1||typeof o.n!=='string'||typeof o.s!=='string'||o.s.length!==24)throw 0;
+  const p={name:o.n.slice(0,10),light:Math.max(0,+o.l||0),stars:{},boss:{},mist:{},items:[],seen:{},finalDone:o.b[6]==='1'};
+  [0,1,2,3,4,5].forEach(i=>{STAGES.forEach((st,k)=>{const v=+o.s[i*4+k];if(v>0&&v<=3)p.stars[i+'-'+st.k]=v;});if(o.b[i]==='1')p.boss[i]=true;});
+  [...(o.i||'')].forEach(c=>{const it=SHOP[+c];if(it&&!p.items.includes(it.id))p.items.push(it.id);});
+  if(o.m&&typeof o.m==='object')Object.keys(o.m).forEach(k=>{if(Array.isArray(o.m[k]))p.mist[k]=o.m[k].filter(d=>typeof d==='string'&&d.split('|').length===3);});
+  (o.e||'').split(',').filter(Boolean).forEach(k=>p.seen[k]=true);
+  return p;}
+function b64u(bytes){let s='';bytes.forEach(b=>s+=String.fromCharCode(b));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+function unb64u(t){t=t.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+='=';const s=atob(t);return Uint8Array.from(s,c=>c.charCodeAt(0));}
+async function encodeProfile(p){
+  let bytes=new TextEncoder().encode(JSON.stringify(packProfile(p))),tag='A';
+  if(window.CompressionStream){try{const st=new Blob([bytes]).stream().pipeThrough(new CompressionStream('deflate-raw'));bytes=new Uint8Array(await new Response(st).arrayBuffer());tag='B';}catch(e){}}
+  const body=tag+b64u(bytes);return 'SH'+body+chk(body);}
+async function decodeProfile(code){
+  code=code.replace(/\s+/g,'');
+  if(!code.startsWith('SH')||code.length<8)throw new Error('format');
+  const body=code.slice(2,-2);if(chk(body)!==code.slice(-2))throw new Error('check');
+  let bytes=unb64u(body.slice(1));
+  if(body[0]==='B'){const st=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'));bytes=new Uint8Array(await new Response(st).arrayBuffer());}
+  else if(body[0]!=='A')throw new Error('format');
+  return unpackProfile(JSON.parse(new TextDecoder().decode(bytes)));}
+async function exportBox(){
+  const code=await encodeProfile(P());
+  const ov=document.createElement('div');ov.className='overlay';
+  ov.innerHTML=`<div class="result facet small"><h2>${esc(P().name)} 的進度碼</h2>
+    <p class="tip">換平板時，在標題頁按「用進度碼接回進度」，貼上這串文字就能繼續玩。<br>進度碼是「現在」的進度，之後玩過記得再產生一次新的。</p>
+    <textarea class="codebox" readonly>${code}</textarea>
+    <div class="rbtns"><button class="btn" id="cl">關閉</button><button class="btn primary" id="cp">複製進度碼</button></div></div>`;
+  document.body.appendChild(ov);const ta=ov.querySelector('textarea');
+  ta.onclick=()=>ta.select();
+  ov.querySelector('#cl').onclick=()=>{sfx('tap');ov.remove();};
+  ov.querySelector('#cp').onclick=async()=>{sfx('tap');try{await navigator.clipboard.writeText(code);toast('複製好了！可以貼到 Google Classroom 或交給老師保管。');}catch(e){ta.select();toast('請長按上面的文字，選「拷貝」。');}};
+}
+function importBox(){
+  const ov=document.createElement('div');ov.className='overlay';
+  ov.innerHTML=`<div class="result facet small"><div class="rart">${owlSVG()}</div><h2>用進度碼接回進度</h2>
+    <p class="tip">把進度碼貼在下面（SH 開頭的一串文字）。</p>
+    <textarea class="codebox" id="ci" placeholder="在這裡貼上進度碼"></textarea>
+    <div class="rbtns"><button class="btn" id="cl">取消</button><button class="btn primary" id="ok">接回進度</button></div></div>`;
+  document.body.appendChild(ov);
+  ov.querySelector('#cl').onclick=()=>{sfx('tap');ov.remove();};
+  ov.querySelector('#ok').onclick=async()=>{
+    let p;try{p=await decodeProfile(ov.querySelector('#ci').value);}catch(e){sfx('no');toast('這個進度碼好像不完整，請再檢查一次喔！');return;}
+    const apply=()=>{const same=Object.keys(DB.profiles).find(id=>DB.profiles[id].name===p.name);
+      const id=same||('p'+Date.now());DB.profiles[id]=p;DB.current=id;save();ov.remove();sfx('win');toast(`歡迎回來，${p.name}！`);screenMap();};
+    if(Object.values(DB.profiles).some(x=>x.name===p.name))confirmBox(`這台平板已經有「${p.name}」，要用進度碼的進度取代嗎？`,apply);else apply();};
+}
+
+// ===== 啟動 =====
+load();
+if(DB.current&&DB.profiles[DB.current])screenMap();else screenTitle();
+</script>
+</body></html>
